@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +23,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
-public class VuforiaHandler { // no longer a thread (since multithreaded doesn't work very well)
+public class VuforiaHandler { // 0, 0, 0 is the middle of the field looking at blue alliance target
     private final static float mmPerInch = 25.4f; //constants and stuff
     private final static float targetHeight = 6 * mmPerInch;
 
@@ -45,17 +46,15 @@ public class VuforiaHandler { // no longer a thread (since multithreaded doesn't
     private float robotX = 0;
     private float robotY = 0;
     private float robotR = 0;
+    private ArrayList<Float> robotXYR = new ArrayList<Float>();
+
     private List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
     public ArrayList<Float> getRobotXYR(){
-        ArrayList<Float> robotXYR = new ArrayList<Float>();
-        robotXYR.add(robotX);
-        robotXYR.add(robotY);
-        robotXYR.add(robotR);
         return robotXYR;
     }
 
-    public VuforiaHandler() {
+    VuforiaHandler() {
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()); // vuforia init stuff
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -157,6 +156,9 @@ public class VuforiaHandler { // no longer a thread (since multithreaded doesn't
         robotX = coordinates[0];
         robotY = coordinates[1];
         robotR = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES).thirdAngle;
+        robotXYR.set(0, robotX);
+        robotXYR.add(robotY);
+        robotXYR.add(robotR);
 
     }
 }

@@ -1,15 +1,19 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.depricated;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.VuforiaHandler;
+import org.firstinspires.ftc.teamcode.depricated.Moveable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.function.BiConsumer;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Autonomous", group = "Linear OpMode")
+
+@Deprecated
 public class LinearAutonomous extends LinearOpMode {
 
     private DcMotor leftFront;
@@ -82,12 +86,12 @@ public class LinearAutonomous extends LinearOpMode {
         leftRear = hardwareMap.dcMotor.get("leftRear");
         rightRear = hardwareMap.dcMotor.get("rightRear");
 
-        VuforiaHandler vuforiaHandler = new VuforiaHandler();
+        //VuforiaHandler vuforiaHandler = new VuforiaHandler();
 
-        ArrayList<Float> robotXYR = vuforiaHandler.getRobotXYR();
-        robotX = (double) robotXYR.get(0);
-        robotY = (double) robotXYR.get(1);
-        robotR = (double) robotXYR.get(2);
+        //ArrayList<Float> robotXYR = vuforiaHandler.getRobotXYR();
+        //robotX = (double) robotXYR.get(0);
+        //robotY = (double) robotXYR.get(1);
+        //robotR = (double) robotXYR.get(2);
 
         HashMap<DcMotor, Double> driveTrainCoef = new HashMap<>();
         driveTrainCoef.put(leftFront, (l+r+s)/(l+r+s)); // this is just an example, add more eventually

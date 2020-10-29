@@ -1,11 +1,12 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.depricated;
 
+@Deprecated
 public class Target { // depricated
     private String name;
     private float[] xyz;
     private float[] rot;
 
-    public Target(String targetName, float[] targetXyz, float[]targetRot){
+    Target(String targetName, float[] targetXyz, float[]targetRot){
         name = targetName;
         xyz = targetXyz;
         rot = targetRot;

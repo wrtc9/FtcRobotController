@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.depricated;
 
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
@@ -21,10 +21,11 @@ A. Takes necessary params, those params are transformed according to passed stuf
 At the end of the day, I do think just making a regular move method would just be better
 */
 
+@Deprecated
 public class Moveable<K extends HardwareDevice, V> {
     private HashMap map;
     private BiConsumer function;
-    public Moveable(HashMap<K, V> paramMap, BiConsumer<K, V> motorFunction) {
+    Moveable(HashMap<K, V> paramMap, BiConsumer<K, V> motorFunction) {
         map = paramMap; // note: use this.
         function = motorFunction;
     }
