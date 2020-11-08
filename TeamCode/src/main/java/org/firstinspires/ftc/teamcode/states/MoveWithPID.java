@@ -21,13 +21,13 @@ public class MoveWithPID extends AbState { // this state will forever move close
 
     protected final float PRECISION = 1;
 
-    MoveWithPID(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, float[] target, AbState nextState) {
+    MoveWithPID(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, float[] target, AbState nextState) { // think about whether we should put stuff in constructor or init
         super(name);
 
         this.vuforiaHandler = vuforiaHandler;
         this.movementHandler = movementHandler;
 
-        this.target = target;
+        this.target = target; // should be in mm (x, y, r)
 
         this.nextState = nextState;
 

@@ -30,9 +30,9 @@ public class MovementHandler {
     private DcMotor rightRear;
     private HashMap<String, DcMotor> dcMotors;
 
-    private double linEncoderCoef;
+    /*private double linEncoderCoef;
     private double latEncoderCoef;
-    private double rotEncoderCoef;
+    private double rotEncoderCoef;*/
 
     public MovementHandler(){ // takes vuforiahandler?
         leftFront = hardwareMap.dcMotor.get("leftFront");
@@ -45,7 +45,7 @@ public class MovementHandler {
         dcMotors.put("leftRear", leftRear);
         dcMotors.put("rightRear", rightRear);
 
-        try {
+        /*try {
             FileInputStream fileIn = new FileInputStream("CalibrationInfo");
             ObjectInputStream in = new ObjectInputStream(fileIn);
 
@@ -61,7 +61,7 @@ public class MovementHandler {
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void move(double lin, double lat, double rot){
@@ -92,13 +92,13 @@ public class MovementHandler {
         }
     }
 
-    public void moveWithEncoders(double linMM, double latMM, double rotMM){
+    /*public void moveWithEncoders(double linMM, double latMM, double rotMM){
         int lin = (int) (linMM * linEncoderCoef);
         int lat = (int) (latMM * latEncoderCoef);
         int rot = (int) (rotMM * rotEncoderCoef);
 
         moveWithTicks(lin, lat, rot);
-    }
+    }*/
 
     public void moveWithTicks(int lin, int lat, int rot){ // this might break
         if (currentOpMode != OpModeMode.AUTONOMOUS){

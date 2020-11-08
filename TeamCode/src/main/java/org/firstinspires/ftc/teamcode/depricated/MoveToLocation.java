@@ -1,9 +1,10 @@
-package org.firstinspires.ftc.teamcode.states;
+package org.firstinspires.ftc.teamcode.depricated;
 
 import org.firstinspires.ftc.teamcode.MovementHandler;
 import org.firstinspires.ftc.teamcode.VuforiaHandler;
 import org.firstinspires.ftc.teamcode.AbState;
 
+@Deprecated
 public class MoveToLocation extends AbState { // this class shouldn't be constructed with all of this special stuff, it should be a super class
 
     private VuforiaHandler vuforiaHandler;
@@ -61,6 +62,6 @@ public class MoveToLocation extends AbState { // this class shouldn't be constru
         deltaY = target[1] - robotY;
         deltaR = target[2] - robotR;
 
-        movementHandler.moveWithEncoders(deltaX, deltaY, deltaR); // change to pid movement
+        //movementHandler.moveWithEncoders(deltaX, deltaY, deltaR); // change to pid movement
     }
 }

@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.VuforiaHandler;
 
 public class IterativeMoveState extends MoveWithPID {
     private float[] translation;
+
     IterativeMoveState(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, float[] target, float[] translation, AbState nextState) {
         super(name, vuforiaHandler, movementHandler, target, nextState);
         this.translation = translation;

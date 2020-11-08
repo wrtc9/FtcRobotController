@@ -23,7 +23,6 @@ public class ShootState extends AbState {
 
     @Override
     public AbState next() {
-        nextState.init();
         return nextState;
     }
 

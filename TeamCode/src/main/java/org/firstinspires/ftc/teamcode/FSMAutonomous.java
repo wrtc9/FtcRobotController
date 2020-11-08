@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.states.DefaultBlueAuto;
+import org.firstinspires.ftc.teamcode.states.DefaultAuto;
 
 import java.util.Locale;
 
@@ -23,7 +23,7 @@ public class FSMAutonomous extends OpMode {
     public VuforiaHandler vuforiaHandler;
     public MovementHandler movementHandler;
 
-    private DefaultBlueAuto defaultBlueAuto;
+    private DefaultAuto defaultAuto;
 
     private static float MM_PER_INCH = 25.4f;
 
@@ -52,13 +52,13 @@ public class FSMAutonomous extends OpMode {
         leftRear = movementHandler.getDcMotor("leftRear");
         rightRear = movementHandler.getDcMotor("rightRear");
 
-        defaultBlueAuto = new DefaultBlueAuto("default", vuforiaHandler, movementHandler);
+        defaultAuto = new DefaultAuto("default", vuforiaHandler, movementHandler, Side.BLUE);
     }
 
     @Override
     public void loop() {
         vuforiaHandler.update();
-        defaultBlueAuto.run();
+        defaultAuto.run();
 
         // telemetry
         // telemetry.addData("CURRENT STATE", defaultBlueAuto.getCurrentState().getName()); this will need to be updated
