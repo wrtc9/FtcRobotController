@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.depricated;
 
 import java.io.Serializable;
 
+@Deprecated
 public class CalibrationInfo implements Serializable {
     private double distance = 0;
     private int ticks = 0;

@@ -46,15 +46,20 @@ public class VuforiaHandler { // 0, 0, 0 is the middle of the field looking at b
     private float robotX = 0;
     private float robotY = 0;
     private float robotR = 0;
-    private ArrayList<Float> robotXYR = new ArrayList<Float>();
 
     private List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
-    public ArrayList<Float> getRobotXYR(){
-        return robotXYR;
+    public float getRobotX(){
+        return robotX;
+    }
+    public float getRobotY(){
+        return robotY;
+    }
+    public float getRobotR(){
+        return robotR;
     }
 
-    VuforiaHandler() {
+    public VuforiaHandler() {
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()); // vuforia init stuff
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -153,12 +158,8 @@ public class VuforiaHandler { // 0, 0, 0 is the middle of the field looking at b
 
         // actual autonomous stuff here
         float[] coordinates = lastLocation.getTranslation().getData();
-        robotX = coordinates[0];
-        robotY = coordinates[1];
+        robotX = coordinates[0]; // bruh moment this won't work since immutable shit
+        robotY = coordinates[1]; // maybe fix with having an object to store update versions of these or have update return something or just run getters everytime but thats a pain in the ass
         robotR = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES).thirdAngle;
-        robotXYR.set(0, robotX);
-        robotXYR.add(robotY);
-        robotXYR.add(robotR);
-
     }
 }

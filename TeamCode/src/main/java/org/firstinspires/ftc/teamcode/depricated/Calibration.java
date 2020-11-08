@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.depricated;
 
 
 // repeatedly move with encoders and check against the distance (total ticks/total distance = ticks/mm)
@@ -6,10 +6,11 @@ package org.firstinspires.ftc.teamcode;
 // if we use encoders the fsm idea becomes a bit clearer
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
+import org.firstinspires.ftc.teamcode.MovementHandler;
+import org.firstinspires.ftc.teamcode.VuforiaHandler;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
     - Remove dependency on MovementHandler maybe
     - make it better :(
  */
+@Deprecated
 public class Calibration extends LinearOpMode { // this is not going to work, and I know it's not going to work, but I don't care enough to make it better
     public VuforiaHandler vuforiaHandler;
     public MovementHandler movementHandler;
@@ -38,9 +40,9 @@ public class Calibration extends LinearOpMode { // this is not going to work, an
     public double totalRot = 0;
     public int totalTicks = 0;
 
-    public Float robotX;
-    public Float robotY;
-    public Float robotR;
+    public float robotX;
+    public float robotY;
+    public float robotR;
 
     public static int DEFAULT_TICKS = 1440;
 
@@ -53,10 +55,9 @@ public class Calibration extends LinearOpMode { // this is not going to work, an
         vuforiaHandler = new VuforiaHandler();
         movementHandler = new MovementHandler();
 
-        ArrayList<Float> robotXYR = vuforiaHandler.getRobotXYR();
-        robotX = robotXYR.get(0);
-        robotY = robotXYR.get(1);
-        robotR = robotXYR.get(2);
+        robotX = vuforiaHandler.getRobotX(); // change so robotXYR are updated when needed
+        robotY = vuforiaHandler.getRobotY();
+        robotR = vuforiaHandler.getRobotR();
 
         while (opModeIsActive()){ // this can definitely be done better :(
             float[] linInital = {robotX, robotY};
@@ -83,7 +84,7 @@ public class Calibration extends LinearOpMode { // this is not going to work, an
         }
 
         try { // serialization hurts
-            FileInputStream fileIn = new FileInputStream("CalibrationStorage.txt");
+            FileInputStream fileIn = new FileInputStream("calibrationStorage.txt");
             ObjectInputStream in = new ObjectInputStream(fileIn);
             calibrationInfo = (ArrayList<CalibrationInfo>) in.readObject();
             in.close();
@@ -111,7 +112,7 @@ public class Calibration extends LinearOpMode { // this is not going to work, an
         rotCalibration.addDistance(totalRot);
 
         try {
-            FileOutputStream fileOut = new FileOutputStream("CalibrationStorage.txt");
+            FileOutputStream fileOut = new FileOutputStream("calibrationStorage.txt");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(calibrationInfo);
             out.close();

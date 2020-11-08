@@ -3,21 +3,29 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.states.DefaultBlueAuto;
+
 import java.util.Locale;
 
 /* TODO
-    - Add states
+    - Tune PID
+    - Update phone location in VuforiaHandler
+    - Standardize variable names
+    - Clean MoveAndShoot and wrapped StateMachines
+    - Consider a better way to pass handlers (hate to say it but maybe public handlers)
+    - Telemetry (or serialization?) error plotting
+    - Public enum mode (BLUE, RED)? (there shouldn't be any checks low level since that would be inefficient)
+    - Maybe make a builder to consolidate all of the states into a nice package (though extra utility would have to be added on to make it worth it)
  */
+
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "FSMAutonomous", group = "Autonomous")
 public class FSMAutonomous extends OpMode {
     public VuforiaHandler vuforiaHandler;
     public MovementHandler movementHandler;
 
-    private StateMachine stateMachine;
-    private MoveToLocation moveToLineExample;
-    private RestState restState;
+    private DefaultBlueAuto defaultBlueAuto;
 
-    private static double MM_PER_INCH = 25.4;
+    private static float MM_PER_INCH = 25.4f;
 
     private DcMotor leftFront;
     private DcMotor rightFront;
@@ -44,19 +52,16 @@ public class FSMAutonomous extends OpMode {
         leftRear = movementHandler.getDcMotor("leftRear");
         rightRear = movementHandler.getDcMotor("rightRear");
 
-
-        restState = new RestState("rest"); // example
-        moveToLineExample = new MoveToLocation("moveToLineExample", vuforiaHandler, movementHandler, new double[]{-13.625 * MM_PER_INCH, 8.25 * MM_PER_INCH, -90}, restState);
-        stateMachine = new StateMachine("moveToLineExample", restState, moveToLineExample);
+        defaultBlueAuto = new DefaultBlueAuto("default", vuforiaHandler, movementHandler);
     }
 
     @Override
     public void loop() {
         vuforiaHandler.update();
-        stateMachine.run();
+        defaultBlueAuto.run();
 
         // telemetry
-        telemetry.addData("CURRENT STATE", stateMachine.getCurrentState().getName());
+        // telemetry.addData("CURRENT STATE", defaultBlueAuto.getCurrentState().getName()); this will need to be updated
         telemetry.addData("MOTOR LF", String.format(Locale.ENGLISH, "POS: %s, POW: %s", leftFront.getTargetPosition(), leftFront.getPower()));
         telemetry.addData("MOTOR RF", String.format(Locale.ENGLISH, "POS: %s, POW: %s", rightFront.getTargetPosition(), rightFront.getPower()));
         telemetry.addData("MOTOR LR", String.format(Locale.ENGLISH, "POS: %s, POW: %s", leftRear.getTargetPosition(), leftRear.getPower()));
