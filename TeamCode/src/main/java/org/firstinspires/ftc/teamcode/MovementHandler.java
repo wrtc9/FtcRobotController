@@ -131,4 +131,8 @@ public class MovementHandler {
     public boolean isBusy(){
         return leftFront.isBusy() || rightFront.isBusy() || leftRear.isBusy() || rightRear.isBusy();
     }
+
+    public WobbleSetting findWobble() { // could use sensors or tfod with ratio between sides (make sure camera is straight on if doing this)
+        return null;
+    }
 }

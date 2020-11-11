@@ -8,7 +8,7 @@ public class RestState extends AbState {
     }
 
     @Override
-    public void init() {
+    public void init(AbState previousState) {
 
     }
 

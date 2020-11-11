@@ -52,7 +52,8 @@ public class FSMAutonomous extends OpMode {
         leftRear = movementHandler.getDcMotor("leftRear");
         rightRear = movementHandler.getDcMotor("rightRear");
 
-        defaultAuto = new DefaultAuto("default", vuforiaHandler, movementHandler, Side.BLUE);
+        defaultAuto = new DefaultAuto("default", vuforiaHandler, movementHandler, Side.BLUE); // edit side enum for different sides
+        defaultAuto.init(null);
     }
 
     @Override
@@ -61,7 +62,7 @@ public class FSMAutonomous extends OpMode {
         defaultAuto.run();
 
         // telemetry
-        // telemetry.addData("CURRENT STATE", defaultBlueAuto.getCurrentState().getName()); this will need to be updated
+        telemetry.addData("CURRENT STATE", defaultAuto.getCurrentState().getName());
         telemetry.addData("MOTOR LF", String.format(Locale.ENGLISH, "POS: %s, POW: %s", leftFront.getTargetPosition(), leftFront.getPower()));
         telemetry.addData("MOTOR RF", String.format(Locale.ENGLISH, "POS: %s, POW: %s", rightFront.getTargetPosition(), rightFront.getPower()));
         telemetry.addData("MOTOR LR", String.format(Locale.ENGLISH, "POS: %s, POW: %s", leftRear.getTargetPosition(), leftRear.getPower()));

@@ -21,6 +21,8 @@ public class MoveWithPID extends AbState { // this state will forever move close
 
     protected final float PRECISION = 1;
 
+    private final float mmPerIn = 24.3f;
+
     MoveWithPID(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, float[] target, AbState nextState) { // think about whether we should put stuff in constructor or init
         super(name);
 
@@ -28,23 +30,23 @@ public class MoveWithPID extends AbState { // this state will forever move close
         this.movementHandler = movementHandler;
 
         this.target = target; // should be in mm (x, y, r)
+        target[0] *= mmPerIn;
+        target[1] *= mmPerIn;
 
         this.nextState = nextState;
+    }
 
-        linPID = new PID();
+    @Override
+    public void init(AbState previousState) {
+        linPID = new PID(); // maybe this should be done in init to reduce memory usage
         latPID = new PID();
         rotPID = new PID();
     }
 
     @Override
-    public void init() {
-
-    }
-
-    @Override
     public AbState next() {
         if ((target[0] - robotX) < PRECISION && (target[1] - robotY) < PRECISION && (target[2] - robotR) < PRECISION){
-            nextState.init();
+            nextState.init(this);
             return nextState;
         }
         else {

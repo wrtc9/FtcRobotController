@@ -17,12 +17,13 @@ public class ShootState extends AbState {
     }
 
     @Override
-    public void init() {
+    public void init(AbState previousState) {
         // init motors and such here
     }
 
     @Override
     public AbState next() {
+        nextState.init(this);
         return nextState;
     }
 
