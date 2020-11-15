@@ -27,8 +27,8 @@ public class DLKTeleOpV1 extends OpMode {
 	
 	@Override
 	public void init() {
-		//TODO Go back and relearn objects and inheritence
-		movementHandler = new MovementHandler();
+	//TODO Go back and relearn objects and inheritence
+	movementHandler = new MovementHandler();
 		
 		leftFront = movementHandler.getDcMotor("leftFront");
         rightFront = movementHandler.getDcMotor("rightFront");
