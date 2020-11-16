@@ -2,13 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.depricated.CalibrationInfo;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /* TODO
     - Comment
@@ -18,11 +16,11 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 
 public class MovementHandler {
 
-    public enum OpModeMode {
+    public enum Mode {
         AUTONOMOUS,
         TELEOP
     }
-    private OpModeMode currentOpMode;
+    private Mode currentOpMode;
 
     private DcMotor leftFront;
     private DcMotor rightFront;
@@ -68,8 +66,8 @@ public class MovementHandler {
         double total = lin + lat + rot;
 
 
-        if (currentOpMode != OpModeMode.TELEOP) {
-            changeCurrentOpmode(OpModeMode.TELEOP);
+        if (currentOpMode != Mode.TELEOP) {
+            changeCurrentOpmode(Mode.TELEOP);
         }
 
         leftFront.setPower((lin - lat - rot)/total);
@@ -82,8 +80,8 @@ public class MovementHandler {
         for (DcMotor dcMotor : dcMotors.values()) dcMotor.setMode(runMode);
     }
 
-    public void changeCurrentOpmode (OpModeMode currentOpMode){
-        if (currentOpMode == OpModeMode.AUTONOMOUS){
+    public void changeCurrentOpmode (Mode currentOpMode){
+        if (currentOpMode == Mode.AUTONOMOUS){
             changeModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             changeModes(DcMotor.RunMode.RUN_TO_POSITION);
         }
@@ -101,8 +99,8 @@ public class MovementHandler {
     }*/
 
     public void moveWithTicks(int lin, int lat, int rot){ // this might break
-        if (currentOpMode != OpModeMode.AUTONOMOUS){
-            changeCurrentOpmode(OpModeMode.AUTONOMOUS);
+        if (currentOpMode != Mode.AUTONOMOUS){
+            changeCurrentOpmode(Mode.AUTONOMOUS);
         }
 
         leftFront.setTargetPosition(lin - lat - rot);
@@ -115,13 +113,23 @@ public class MovementHandler {
         // shoots
     }
 
-    public double distanceTo(double deltaX, double deltaY){
-        return Math.sqrt(Math.pow(deltaX, 2)+Math.pow(deltaY, 2));
+    public double distanceTo(double x, double y){
+        return Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2));
     }
 
-    public double thetaTo(double x, double y){
-        double r = distanceTo(x, y);
-        return ((y > 0) ? Math.toDegrees(Math.acos(x/r)) : -Math.toDegrees(Math.acos(x/r)));
+    public double thetaTo(double x, double y, double d){ // d is distanceTo(x, y)
+        double rawTheta = Math.toDegrees(Math.acos(x/d));
+        return (y > 0) ? rawTheta : -rawTheta;
+    }
+
+    public double[] errorTransformer(double x, double y, double r) { // rotates target around robot such that robot is facing forward for lack of a better way of saying it
+        // (if we didn't account for rotation, PIDs would not work; e.g. robot does not face the target)
+        double d = distanceTo(x, y);
+        double theta = thetaTo(x, y, r);
+        theta += 90 - r; // where the actual rotating happens
+        double newX = Math.cos(theta) * d;
+        double newY = Math.sin(theta) * d;
+        return new double[] {newX, newY};
     }
 
     public DcMotor getDcMotor(String name){
@@ -133,6 +141,10 @@ public class MovementHandler {
     }
 
     public WobbleSetting findWobble() { // could use sensors or tfod with ratio between sides (make sure camera is straight on if doing this)
+        return null;
+    }
+
+    public EnumSet<SensorDetection> getSensorDetections(float precision) { // set
         return null;
     }
 }

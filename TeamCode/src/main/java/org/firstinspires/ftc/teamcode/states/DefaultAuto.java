@@ -31,6 +31,10 @@ public class DefaultAuto extends AbState {
     public AbState next() {
         return this;
     }
+    // idea: if (currentState != end) { return this; }; this will work better if we want to nest further and should be the preferred nested state next(); this causes issues for this state
+    // something special should happen with end and the parent should know (eg: special telemetry for end state; should be the same structure as other nested states)
+    // then again, currentState != end should only be used when the end of the state machine is when the final state terminates
+    // explore this idea of state machines terminating
 
     @Override
     public void run() {

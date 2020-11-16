@@ -40,8 +40,8 @@ public class MoveAndShoot extends AbState { // this makes me want to kms
     @Override
     public AbState next() {
         if (moveState.getRepetitions() >= 3){ // test this
-            nextState.init(this);
-            return nextState;
+            nextState.init(this); // would it be better for this to be inside iterative move state? (definitely do this, makes a lot of sense for the parent not to be inquiring about it)
+            return nextState; // that would bring it in line with the idea of terminating machines
         }
         else {
             return this;

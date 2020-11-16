@@ -23,11 +23,16 @@ public class PID { // brug ftc has pidfs built in but theyre useless
     public void update(float error) { // P, I, and D should be between -1, 1
         P = kP * error;
         I += kI * error; // (Math.abs(kI * error) >= CLAMP) ? Math.signum(error) * CLAMP : kI * error; not sure if clamp is necessary since MovementHandler sorta clamps for us
-        D = (pastError == 0) ? 0 : kD * (error - pastError); // accounting for start when non differentiable
+        // I will not be zero at target pos.; however, this doesn't matter bc robot will stop at target and bc this can be reduced w/ tuning
+        D = (pastError == 0) ? 0 : kD * (error - pastError); // accounting for start when non differentiable, this can be done better
 
         input = P + I + D; // this might be better as an average but oh well (though it is averaged in MovementHandler)
 
         pastError = error;
+    }
+
+    public void restart() {
+        I = 0;
     }
 
     public float getInput() {

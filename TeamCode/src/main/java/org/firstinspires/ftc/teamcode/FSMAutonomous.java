@@ -13,9 +13,6 @@ import java.util.Locale;
     - Standardize variable names
     - Clean MoveAndShoot and wrapped StateMachines
     - Consider a better way to pass handlers (hate to say it but maybe public handlers)
-    - Telemetry (or serialization?) error plotting
-    - Public enum mode (BLUE, RED)? (there shouldn't be any checks low level since that would be inefficient)
-    - Maybe make a builder to consolidate all of the states into a nice package (though extra utility would have to be added on to make it worth it)
  */
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "FSMAutonomous", group = "Autonomous")

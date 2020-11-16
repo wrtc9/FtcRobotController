@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.Side;
 import org.firstinspires.ftc.teamcode.VuforiaHandler;
 import org.firstinspires.ftc.teamcode.WobbleSetting;
 
-public class FindZone extends AbState { // returns a state for going to the next zone
+public class FindZone extends AbState { // this might be better if we use init with the next state (init is not guaranteed tho, so maybe this structure is better; look into it)
     private VuforiaHandler vuforiaHandler;
     private MovementHandler movementHandler;
     private Side side;
