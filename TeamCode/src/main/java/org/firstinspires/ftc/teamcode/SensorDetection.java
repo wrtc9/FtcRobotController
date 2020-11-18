@@ -6,7 +6,7 @@ public enum SensorDetection {
     RIGHT(new float[] {1f, 0}),
     LEFT(new float[] {-1f, 0});
 
-    private final float mmPerIn = 24.3f, distance = 8f;
+    private final float mmPerIn = 25.4f, distance = 8f;
     private float[] translation;
 
     SensorDetection(float[] translation) {

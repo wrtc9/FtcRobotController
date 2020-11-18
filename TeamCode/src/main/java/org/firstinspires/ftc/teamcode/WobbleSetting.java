@@ -5,8 +5,8 @@ public enum WobbleSetting {
     B(Locations.B, 1),
     A(Locations.A, 0);
 
-    private Locations location;
-    private int stackHeight;
+    private final Locations location;
+    private final int stackHeight;
 
     WobbleSetting(Locations location, int stackHeight) { // uncomment when you find out drop off locations
         this.location = location;

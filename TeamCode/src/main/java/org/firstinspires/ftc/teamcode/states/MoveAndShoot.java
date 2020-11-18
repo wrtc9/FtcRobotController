@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.states;
 
 import org.firstinspires.ftc.teamcode.AbState;
+import org.firstinspires.ftc.teamcode.Locations;
 import org.firstinspires.ftc.teamcode.MovementHandler;
 import org.firstinspires.ftc.teamcode.Side;
 import org.firstinspires.ftc.teamcode.VuforiaHandler;
@@ -16,7 +17,7 @@ public class MoveAndShoot extends AbState { // this makes me want to kms
     private AbState nextState;
 
     private final float precision = 1f;
-    private final float mmPerIn = 24.3f;
+    private final float mmPerIn = 25.4f;
 
     MoveAndShoot(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, AbState nextState, Side side) {
         super(name);
@@ -28,7 +29,7 @@ public class MoveAndShoot extends AbState { // this makes me want to kms
 
     @Override
     public void init(AbState previousState) {
-        moveState = new IterativeMoveState("MoveAndShoot", new float[]{-13.625f * side.getSign(), 8.25f, 270f}, new float[]{7.5f * side.getSign(), 0f, 0f}, 3, shootState);
+        moveState = new IterativeMoveState("MoveAndShoot", Locations.POWER_SHOT_LINE.getLocation(side), new float[]{7.5f * side.getSign(), 0f, 0f}, 3, shootState);
         shootState = new ShootState("ShootState", vuforiaHandler, movementHandler, moveState);
         // with this structure we'll have to make multiple move and shoot states
         currentState = moveState;

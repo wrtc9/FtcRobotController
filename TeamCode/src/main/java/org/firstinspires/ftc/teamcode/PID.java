@@ -8,7 +8,7 @@ public class PID { // brug ftc has pidfs built in but theyre useless
 
     private float P, I = 0, D; // actual values
 
-    private final float CLAMP = 50f * 24.3f; // pretty much arbitrary
+    private final float CLAMP = 50f * 25.4f; // pretty much arbitrary
 
     private float input;
 

@@ -23,7 +23,7 @@ public class MoveWithPID extends AbState { // this state will forever move close
     private float[] target; // target must be in mm
     protected float robotX, robotY, robotR;
 
-    protected final float precision = 1f, sensorPrecision = 5f * 24.3f, mmPerIn = 24.3f;
+    protected final float precision = 1f, sensorPrecision = 5f * 25.4f, mmPerIn = 25.4f;
 
     MoveWithPID(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, float[] target, AbState nextState) {
         super(name);

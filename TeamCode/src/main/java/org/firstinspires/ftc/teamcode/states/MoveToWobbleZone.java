@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.states;
 
 import org.firstinspires.ftc.teamcode.AbState;
+import org.firstinspires.ftc.teamcode.Locations;
 import org.firstinspires.ftc.teamcode.MovementHandler;
 import org.firstinspires.ftc.teamcode.Side;
 import org.firstinspires.ftc.teamcode.VuforiaHandler;
@@ -25,7 +26,7 @@ public class MoveToWobbleZone extends AbState { // this can be done better
 
     @Override
     public void init(AbState previousState) {
-        moveToStack = new MoveWithPID("MoveToStack", vuforiaHandler, movementHandler, new float[] {-38f * side.getSign(), -42.75f, 180f}, findZone);
+        moveToStack = new MoveWithPID("MoveToStack", vuforiaHandler, movementHandler, Locations.RING_STACK.getLocation(side), findZone);
         findZone = new FindZone("FindZone", vuforiaHandler, movementHandler, side, rest);
         rest = new RestState("Rest");
     }

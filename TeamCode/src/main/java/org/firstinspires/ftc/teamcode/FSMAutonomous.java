@@ -22,8 +22,6 @@ public class FSMAutonomous extends OpMode {
 
     private DefaultAuto defaultAuto;
 
-    private static float MM_PER_INCH = 25.4f;
-
     private DcMotor leftFront;
     private DcMotor rightFront;
     private DcMotor leftRear;
