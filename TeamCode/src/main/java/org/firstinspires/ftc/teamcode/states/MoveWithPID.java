@@ -3,10 +3,13 @@ package org.firstinspires.ftc.teamcode.states;
 import org.firstinspires.ftc.teamcode.MovementHandler;
 import org.firstinspires.ftc.teamcode.PID;
 import org.firstinspires.ftc.teamcode.SensorDetection;
+import org.firstinspires.ftc.teamcode.TelemetryInfo;
 import org.firstinspires.ftc.teamcode.VuforiaHandler;
 import org.firstinspires.ftc.teamcode.AbState;
 
 import java.util.EnumSet;
+import java.util.Locale;
+import java.util.concurrent.TimeoutException;
 
 // maybe change this to use inheritance
 public class MoveWithPID extends AbState { // this state will forever move closer to the desired target; add tolerance and switch
@@ -24,6 +27,9 @@ public class MoveWithPID extends AbState { // this state will forever move close
     protected float robotX, robotY, robotR;
 
     protected final float precision = 1f, sensorPrecision = 5f * 25.4f, mmPerIn = 25.4f;
+
+    private final TelemetryInfo linInfo = new TelemetryInfo("LINEAR_INPUT"), latInfo = new TelemetryInfo("LATERAL_INPUT"), rotInfo = new TelemetryInfo("ROTATIONAL_INPUT");
+    private final TelemetryInfo targetInfo = new TelemetryInfo("TARGET");
 
     MoveWithPID(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, float[] target, AbState nextState) {
         super(name);
@@ -48,6 +54,11 @@ public class MoveWithPID extends AbState { // this state will forever move close
         linPID = new PID(); // reset pids here and init them in constructor?
         latPID = new PID();
         rotPID = new PID();
+
+        telemetryObjs.add(linInfo);
+        telemetryObjs.add(latInfo);
+        telemetryObjs.add(rotInfo);
+        telemetryObjs.add(targetInfo);
     }
 
     @Override
@@ -109,6 +120,12 @@ public class MoveWithPID extends AbState { // this state will forever move close
         linIn = linPID.getInput();
         latIn = latPID.getInput();
         rotIn = rotPID.getInput();
+
+        linInfo.setFormat(String.valueOf(linIn));
+        latInfo.setFormat(String.valueOf(latIn));
+        rotInfo.setFormat(String.valueOf(rotIn));
+
+        targetInfo.setFormat(String.format(Locale.ENGLISH,"X: %f, Y: %f, R: %f", target[0], target[1], target[2]));
 
         movementHandler.move(linIn, latIn, rotIn, 100); // need to define exit conditions
     }

@@ -5,7 +5,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.states.DefaultAuto;
 
+import java.util.ArrayList;
 import java.util.Locale;
+import java.util.concurrent.TimeoutException;
 
 /* TODO
     - Tune PID
@@ -56,6 +58,8 @@ public class FSMAutonomous extends OpMode {
         vuforiaHandler.update();
         defaultAuto.run();
 
+        ArrayList<TelemetryInfo> telemetryObjs = defaultAuto.getTelemetry();
+
         // telemetry
         telemetry.addData("CURRENT STATE", defaultAuto.getCurrentState().getName());
         telemetry.addData("MOTOR LF", String.format(Locale.ENGLISH, "POS: %s, POW: %s", leftFront.getTargetPosition(), leftFront.getPower()));
@@ -63,5 +67,9 @@ public class FSMAutonomous extends OpMode {
         telemetry.addData("MOTOR LR", String.format(Locale.ENGLISH, "POS: %s, POW: %s", leftRear.getTargetPosition(), leftRear.getPower()));
         telemetry.addData("MOTOR RR", String.format(Locale.ENGLISH, "POS: %s, POW: %s", rightRear.getTargetPosition(), rightRear.getPower()));
         telemetry.update();
+
+        for (TelemetryInfo telemetryInfo : telemetryObjs) {
+            telemetry.addData(telemetryInfo.getCaption(), telemetryInfo.getFormat());
+        }
     }
 }

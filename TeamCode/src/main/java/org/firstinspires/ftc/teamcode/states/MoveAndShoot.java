@@ -50,5 +50,7 @@ public class MoveAndShoot extends AbState { // this makes me want to kms
     public void run() {
         currentState.run();
         currentState = currentState.next();
+
+        telemetryObjs = currentState.getTelemetry();
     }
 }

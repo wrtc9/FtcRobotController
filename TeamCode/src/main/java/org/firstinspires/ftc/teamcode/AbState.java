@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import java.util.ArrayList;
+
 public abstract class AbState { // this is basically a decorator pattern
     protected String name;
     protected AbState currentState = this;
+
+    protected ArrayList<TelemetryInfo> telemetryObjs;
 
     public AbState(String name){
         this.name = name;
@@ -25,4 +29,8 @@ public abstract class AbState { // this is basically a decorator pattern
     public abstract AbState next(); // returns next state to be run and also end behavior
 
     public abstract void run();
+
+    public ArrayList<TelemetryInfo> getTelemetry() {
+        return telemetryObjs;
+    }
 }

@@ -5,6 +5,8 @@ import org.firstinspires.ftc.teamcode.MovementHandler;
 import org.firstinspires.ftc.teamcode.Side;
 import org.firstinspires.ftc.teamcode.VuforiaHandler;
 
+import java.util.ArrayList;
+
 public class DefaultAuto extends AbState {
     private VuforiaHandler vuforiaHandler;
     private MovementHandler movementHandler;
@@ -40,5 +42,7 @@ public class DefaultAuto extends AbState {
     public void run() {
         currentState.run();
         currentState = currentState.next();
+
+        telemetryObjs = currentState.getTelemetry();
     }
 }

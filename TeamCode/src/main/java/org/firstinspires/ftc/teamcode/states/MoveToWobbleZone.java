@@ -52,5 +52,7 @@ public class MoveToWobbleZone extends AbState { // this can be done better
     public void run() {
         currentState.run();
         currentState = currentState.next(); // this is just covering it in another layer
+
+        telemetryObjs = currentState.getTelemetry();
     }
 }
