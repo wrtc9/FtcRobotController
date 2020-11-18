@@ -9,9 +9,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 //Copy pasted for now because I don't know what I need to import
 
-@Teleop(name = "DKTeleOpV1", group = "TeleOp")
+@TeleOp(name = "DKTeleOpV1", group = "TeleOp")
 public class DLKTeleOpV1 extends OpMode {
 	public MovementHandler movementHandler;
 	
@@ -24,6 +25,7 @@ public class DLKTeleOpV1 extends OpMode {
 	private double xCheck;
 	private double yCheck;
 	private double rt;
+	private double lt;
 	
 	@Override
 	public void init() {
@@ -55,6 +57,8 @@ public class DLKTeleOpV1 extends OpMode {
 
 	//Checks to see if the value is above a certain threshold so that we can have a deadzone on the joystick and triggers
 	private double deadzone(variable, deadzone){
+		float variable;
+		double deadzone;
 		if(Math.abs(variable) < deadzone) {
 			return 0;
 		} else {
