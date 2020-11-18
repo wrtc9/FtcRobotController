@@ -14,7 +14,7 @@ public enum SensorDetection {
     }
 
     public float[] getDetour(float[] position) {
-        for (int i = 0; i > 2; i++) {
+        for (int i = 0; i < 2; i++) {
             position[i] += translation[i] * mmPerIn * distance;
         }
         return position;

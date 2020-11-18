@@ -6,10 +6,7 @@ import org.firstinspires.ftc.teamcode.SensorDetection;
 import org.firstinspires.ftc.teamcode.VuforiaHandler;
 import org.firstinspires.ftc.teamcode.AbState;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
 
 // maybe change this to use inheritance
 public class MoveWithPID extends AbState { // this state will forever move closer to the desired target; add tolerance and switch
@@ -18,28 +15,17 @@ public class MoveWithPID extends AbState { // this state will forever move close
     protected VuforiaHandler vuforiaHandler;
     protected MovementHandler movementHandler;
 
-    protected float[] target, actualTarget; // target must be in mm
-
-    private float[] currentPosition;
-
     protected AbState nextState;
-
-    private EnumSet<SensorDetection> avoidedSides;
-
-    protected float robotX, robotY, robotR;
 
     private PID linPID, latPID, rotPID;
     private float linIn, latIn, rotIn;
 
-    protected final float PRECISION = 1f, SENSOR_PRECISION = 10f;
+    private float[] target; // target must be in mm
+    protected float robotX, robotY, robotR;
 
-    private final float mmPerIn = 24.3f;
+    protected final float precision = 1f, sensorPrecision = 5f * 24.3f, mmPerIn = 24.3f;
 
-    private EnumSet<SensorDetection> detections;
-
-    private SensorDetection bestDirection;
-
-    protected MoveWithPID(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, float[] target, AbState nextState) {
+    MoveWithPID(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, float[] target, AbState nextState) {
         super(name);
 
         this.vuforiaHandler = vuforiaHandler;
@@ -52,68 +38,29 @@ public class MoveWithPID extends AbState { // this state will forever move close
         this.nextState = nextState;
     }
 
-    // this is only used for avoidance
-    private MoveWithPID(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, AbState nextState, EnumSet<SensorDetection> avoidedSides) {
+    protected MoveWithPID(String name, AbState nextState) {
         super(name);
-
-        this.vuforiaHandler = vuforiaHandler;
-        this.movementHandler = movementHandler;
-
-        this.nextState = nextState; // will always be passed this
-
-        this.avoidedSides = avoidedSides;
+        this.nextState = nextState;
     }
-
-
 
     @Override
     public void init(AbState previousState) {
         linPID = new PID(); // reset pids here and init them in constructor?
         latPID = new PID();
         rotPID = new PID();
-
-
-
-        // obj avoidance
-
-        // check if there are any sides to be avoided
-        if (!avoidedSides.isEmpty()) {
-            EnumSet<SensorDetection> openSides = EnumSet.complementOf(detections); // find where we can avoid to
-
-            SensorDetection leastDirection = null;
-            double leastDistance = 0;
-
-            for (SensorDetection direction : openSides) { // find which side is best to detour to
-                float[] detour = direction.getDetour(currentPosition);
-                double distance = movementHandler.distanceTo(target[0] - detour[0], target[1] - detour[1]);
-
-                if (distance < leastDistance || leastDirection == null) { // this is a bit worrisome
-                    leastDirection = direction;
-                    leastDistance = distance;
-                }
-            }
-
-            bestDirection = leastDirection; // save the best direction
-        }
     }
-
-
 
     @Override
     public AbState next() { // this might mess up
-        EnumSet<SensorDetection> newDetections = detections.clone(); // edge cases: will not work if you avoid and then there's another obstacle (fixed by removing sides without detections)
-        newDetections.removeAll(avoidedSides);
+        EnumSet<SensorDetection> detections = movementHandler.getSensorDetections(sensorPrecision);
 
-        if ((target[0] - robotX) < PRECISION && (target[1] - robotY) < PRECISION && (target[2] - robotR) < PRECISION){
+        if ((target[0] - robotX) < precision && (target[1] - robotY) < precision && (target[2] - robotR) < precision){
             nextState.init(this);
             return nextState;
         }
 
-        // if there is a new object and we're not near our target (if our target is something like a stack of rings)
-        else if (!newDetections.isEmpty() &&
-                !((target[0] - robotX) < PRECISION + SENSOR_PRECISION && (target[1] - robotY) < PRECISION + SENSOR_PRECISION && (target[2] - robotR) < PRECISION + SENSOR_PRECISION)) {
-            avoidedSides.addAll(newDetections);
-            return new MoveWithPID("Detour" + name, vuforiaHandler, movementHandler, nextState, avoidedSides);
+        else if (!detections.isEmpty()) {
+            return new MoveToAvoid("Detour" + name, this);
         }
 
         else {
@@ -122,9 +69,20 @@ public class MoveWithPID extends AbState { // this state will forever move close
 
     }
 
-    @Deprecated
-    public float[] getTarget() {
+    @Deprecated // deprecated for now, but this is an alternative to making children control target with get target, instead controlling from the top
+    public void setTarget(float[] target) {
+        resetPIDS();
+        this.target = target;
+    }
+
+    protected float[] getTarget() { // instead of having a MoveToAvoid class which extends this class, we could make a set target method which sets the target and resets the controllers and have the target be controlled from the outside
         return target;
+    }
+
+    public void resetPIDS() {
+        linPID.reset();
+        latPID.reset();
+        rotPID.reset();
     }
 
     @Override
@@ -133,28 +91,12 @@ public class MoveWithPID extends AbState { // this state will forever move close
         robotY = vuforiaHandler.getRobotY();
         robotR = vuforiaHandler.getRobotR();
 
+        target = getTarget();
 
-
-        // obj avoidance:
-        detections = movementHandler.getSensorDetections(SENSOR_PRECISION);
-
-        currentPosition = new float[] {robotX, robotY, robotR};
-
-        if (!avoidedSides.isEmpty() && bestDirection != null) { // if we're avoiding
-            EnumSet<SensorDetection> openSides = EnumSet.complementOf(detections);
-            actualTarget = bestDirection.getDetour(currentPosition); // find the target in the best direction
-            avoidedSides.removeAll(openSides); // remove sides which are no longer being avoided
-        }
-        else {
-            actualTarget = target;
-        }
-
-
-
-        double[] transformedError = movementHandler.errorTransformer(actualTarget[0] - robotX, actualTarget[1] - robotY, actualTarget[2] - robotR);
+        double[] transformedError = movementHandler.errorTransformer(target[0] - robotX, target[1] - robotY, target[2] - robotR);
         float xError = (float) transformedError[0];
         float yError = (float) transformedError[1];
-        float rError = actualTarget[2] - robotR;
+        float rError = target[2] - robotR;
 
         latPID.update(xError);
         linPID.update(yError);
@@ -164,6 +106,6 @@ public class MoveWithPID extends AbState { // this state will forever move close
         latIn = latPID.getInput();
         rotIn = rotPID.getInput();
 
-        movementHandler.move(linIn, latIn, rotIn); // need to define exit conditions
+        movementHandler.move(linIn, latIn, rotIn, 100); // need to define exit conditions
     }
 }

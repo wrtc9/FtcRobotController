@@ -33,7 +33,7 @@ public class MoveToLocation extends AbState { // this class shouldn't be constru
         // just adding up the strafe, forward, and rotational stuff might not work; if they weighting is unique, calibration will prob have to be changed which will be a pain in the ass
          // movementHandler.thetaTo(deltaX, deltaY); changed because it prob won't work
 
-        movementHandler.changeCurrentOpmode(MovementHandler.Mode.AUTONOMOUS);
+        movementHandler.changeCurrentOpmode(MovementHandler.Mode.RUN_WITH_ENCODERS);
     }
 
     @Override

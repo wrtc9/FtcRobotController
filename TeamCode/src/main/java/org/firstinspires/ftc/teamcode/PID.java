@@ -8,7 +8,7 @@ public class PID { // brug ftc has pidfs built in but theyre useless
 
     private float P, I = 0, D; // actual values
 
-    private final float CLAMP = 144 * 24.3f; // currently set to max error, though I'm not sure if this is the best value
+    private final float CLAMP = 50f * 24.3f; // pretty much arbitrary
 
     private float input;
 
@@ -22,7 +22,7 @@ public class PID { // brug ftc has pidfs built in but theyre useless
 
     public void update(float error) { // P, I, and D should be between -1, 1
         P = kP * error;
-        I += kI * error; // (Math.abs(kI * error) >= CLAMP) ? Math.signum(error) * CLAMP : kI * error; not sure if clamp is necessary since MovementHandler sorta clamps for us
+        I += (Math.abs(kI * error) >= CLAMP) ? Math.signum(error) * CLAMP : kI * error; // not sure if clamp is necessary since MovementHandler sorta clamps for us
         // I will not be zero at target pos.; however, this doesn't matter bc robot will stop at target and bc this can be reduced w/ tuning
         D = (pastError == 0) ? 0 : kD * (error - pastError); // accounting for start when non differentiable, this can be done better
 
@@ -31,8 +31,9 @@ public class PID { // brug ftc has pidfs built in but theyre useless
         pastError = error;
     }
 
-    public void restart() {
+    public void reset() {
         I = 0;
+        pastError = 0;
     }
 
     public float getInput() {

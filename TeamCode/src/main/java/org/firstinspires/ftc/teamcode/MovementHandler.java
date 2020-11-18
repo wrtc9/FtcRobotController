@@ -2,11 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 /* TODO
     - Comment
@@ -16,9 +13,9 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 
 public class MovementHandler {
 
-    public enum Mode {
-        AUTONOMOUS,
-        TELEOP
+    public enum Mode { // maybe change this to just use FTC's default enums
+        RUN_WITH_ENCODERS,
+        RUN_WITHOUT_ENCODERS
     }
     private Mode currentOpMode;
 
@@ -62,18 +59,32 @@ public class MovementHandler {
         }*/
     }
 
-    public void move(double lin, double lat, double rot){
-        double total = lin + lat + rot;
+    public void move(double lin, double lat, double rot){ // if you know for certain that abs(lin + lat + rot) < 1
 
-
-        if (currentOpMode != Mode.TELEOP) {
-            changeCurrentOpmode(Mode.TELEOP);
+        if (currentOpMode != Mode.RUN_WITHOUT_ENCODERS) {
+            changeCurrentOpmode(Mode.RUN_WITHOUT_ENCODERS);
         }
 
-        leftFront.setPower((lin - lat - rot)/total);
-        rightFront.setPower((lin + lat + rot)/total);
-        leftRear.setPower((lin + lat - rot)/total);
-        rightRear.setPower((lin - lat + rot)/total);
+        leftFront.setPower(lin - lat - rot);
+        rightFront.setPower(lin + lat + rot);
+        leftRear.setPower(lin + lat - rot);
+        rightRear.setPower(lin - lat + rot);
+    }
+
+    public void move(double lin, double lat, double rot, int weight){ // weight is a bit like speed in a sense
+
+        if (currentOpMode != Mode.RUN_WITHOUT_ENCODERS) {
+            changeCurrentOpmode(Mode.RUN_WITHOUT_ENCODERS);
+        }
+
+        leftFront.setPower(sigmoid(lin - lat - rot, weight));
+        rightFront.setPower(sigmoid(lin + lat + rot, weight));
+        leftRear.setPower(sigmoid(lin + lat - rot, weight));
+        rightRear.setPower(sigmoid(lin - lat + rot, weight));
+    }
+
+    public double sigmoid(double x, int weight) { // add in a coefficient of x
+        return 2 / (1 + Math.exp(x / weight)) - 1;
     }
 
     public void changeModes(DcMotor.RunMode runMode){
@@ -81,7 +92,7 @@ public class MovementHandler {
     }
 
     public void changeCurrentOpmode (Mode currentOpMode){
-        if (currentOpMode == Mode.AUTONOMOUS){
+        if (currentOpMode == Mode.RUN_WITH_ENCODERS){
             changeModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             changeModes(DcMotor.RunMode.RUN_TO_POSITION);
         }
@@ -99,8 +110,8 @@ public class MovementHandler {
     }*/
 
     public void moveWithTicks(int lin, int lat, int rot){ // this might break
-        if (currentOpMode != Mode.AUTONOMOUS){
-            changeCurrentOpmode(Mode.AUTONOMOUS);
+        if (currentOpMode != Mode.RUN_WITH_ENCODERS){
+            changeCurrentOpmode(Mode.RUN_WITH_ENCODERS);
         }
 
         leftFront.setTargetPosition(lin - lat - rot);
