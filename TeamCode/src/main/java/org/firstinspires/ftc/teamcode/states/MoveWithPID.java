@@ -54,12 +54,12 @@ public class MoveWithPID extends AbState { // this state will forever move close
     public AbState next() { // this might mess up
         EnumSet<SensorDetection> detections = movementHandler.getSensorDetections(sensorPrecision);
 
-        if ((target[0] - robotX) < precision && (target[1] - robotY) < precision && (target[2] - robotR) < precision){
+        if (distanceCheck(precision)){
             nextState.init(this);
             return nextState;
         }
 
-        else if (!detections.isEmpty()) {
+        else if (!detections.isEmpty() && !distanceCheck(precision + sensorPrecision)) { // we should try to phase the distance check out, only doing this so that we can get to the stack of rings
             return new MoveToAvoid("Detour" + name, this);
         }
 
@@ -83,6 +83,10 @@ public class MoveWithPID extends AbState { // this state will forever move close
         linPID.reset();
         latPID.reset();
         rotPID.reset();
+    }
+
+    protected boolean distanceCheck(float precision) {
+        return (target[0] - robotX) < precision && (target[1] - robotY) < precision && (target[2] - robotR) < precision;
     }
 
     @Override

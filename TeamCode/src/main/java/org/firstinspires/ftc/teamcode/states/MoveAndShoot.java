@@ -28,10 +28,7 @@ public class MoveAndShoot extends AbState { // this makes me want to kms
 
     @Override
     public void init(AbState previousState) {
-        moveState = new IterativeMoveState("MoveAndShoot", vuforiaHandler, movementHandler,
-                new float[]{-13.625f * side.getSign(), 8.25f, -90f}, // x-values are mirrored
-                new float[]{7.5f * side.getSign(), 0f, 0f}, shootState);
-
+        moveState = new IterativeMoveState("MoveAndShoot", new float[]{-13.625f * side.getSign(), 8.25f, 270f}, new float[]{7.5f * side.getSign(), 0f, 0f}, 3, shootState);
         shootState = new ShootState("ShootState", vuforiaHandler, movementHandler, moveState);
         // with this structure we'll have to make multiple move and shoot states
         currentState = moveState;

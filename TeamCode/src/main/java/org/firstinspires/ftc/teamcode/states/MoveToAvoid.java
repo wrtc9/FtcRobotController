@@ -35,7 +35,10 @@ public class MoveToAvoid extends MoveWithPID { // edit this so that the robot do
         EnumSet<SensorDetection> detections = movementHandler.getSensorDetections(sensorPrecision);
         float[] currentPosition = new float[]{robotX, robotY, robotR};
 
-        if (detections != previousDetections) {
+        EnumSet<SensorDetection> newDetections = detections.clone();
+        newDetections.removeAll(previousDetections);
+
+        if (!newDetections.isEmpty()) { // rising edge only
             EnumSet<SensorDetection> openSides = EnumSet.complementOf(detections); // find where we can avoid to
 
             SensorDetection leastDirection = null;
