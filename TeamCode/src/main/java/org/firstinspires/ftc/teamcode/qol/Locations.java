@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.qol;
 
 public enum Locations {
     ORIGIN(new float[]{0f, 0f, 0f}),

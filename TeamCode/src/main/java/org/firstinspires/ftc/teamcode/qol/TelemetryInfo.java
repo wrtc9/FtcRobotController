@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.qol;
 
 public class TelemetryInfo { // this is kinda stupid but oh well
     private String caption;

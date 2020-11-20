@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.depricated;
 
-import org.firstinspires.ftc.teamcode.AbState;
+import org.firstinspires.ftc.teamcode.states.AbState;
 
 @Deprecated
 public class StateMachine { // this is unnecessary

@@ -7,8 +7,8 @@ package org.firstinspires.ftc.teamcode.depricated;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.MovementHandler;
-import org.firstinspires.ftc.teamcode.VuforiaHandler;
+import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
+import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

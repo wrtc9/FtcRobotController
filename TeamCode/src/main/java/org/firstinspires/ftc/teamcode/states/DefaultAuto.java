@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode.states;
 
-import org.firstinspires.ftc.teamcode.AbState;
-import org.firstinspires.ftc.teamcode.MovementHandler;
-import org.firstinspires.ftc.teamcode.Side;
-import org.firstinspires.ftc.teamcode.VuforiaHandler;
-
-import java.util.ArrayList;
+import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
+import org.firstinspires.ftc.teamcode.qol.Side;
+import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
 
 public class DefaultAuto extends AbState {
     private VuforiaHandler vuforiaHandler;

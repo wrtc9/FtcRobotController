@@ -1,4 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.states;
+
+import org.firstinspires.ftc.teamcode.qol.TelemetryInfo;
 
 import java.util.ArrayList;
 

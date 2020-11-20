@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.depricated;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -12,6 +13,7 @@ import java.util.function.BiConsumer;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp", group = "TeleOpMode")
 
 @Deprecated
+@Disabled
 public class TeleOp extends OpMode {
 
     /*

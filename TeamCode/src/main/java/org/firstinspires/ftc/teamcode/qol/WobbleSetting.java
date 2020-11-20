@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.qol;
 
 public enum WobbleSetting {
     C(Locations.C, 4), // defaults for blue side, change x and r for red

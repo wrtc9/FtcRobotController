@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode.states;
 
-import org.firstinspires.ftc.teamcode.AbState;
-import org.firstinspires.ftc.teamcode.Locations;
-import org.firstinspires.ftc.teamcode.MovementHandler;
-import org.firstinspires.ftc.teamcode.Side;
-import org.firstinspires.ftc.teamcode.VuforiaHandler;
+import org.firstinspires.ftc.teamcode.qol.Locations;
+import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
+import org.firstinspires.ftc.teamcode.qol.Side;
+import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
 
 public class MoveToWobbleZone extends AbState { // this can be done better
     private VuforiaHandler vuforiaHandler;

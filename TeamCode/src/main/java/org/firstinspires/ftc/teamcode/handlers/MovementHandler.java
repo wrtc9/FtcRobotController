@@ -1,6 +1,9 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.handlers;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.teamcode.qol.SensorDetection;
+import org.firstinspires.ftc.teamcode.qol.WobbleSetting;
 
 import java.util.EnumSet;
 import java.util.HashMap;

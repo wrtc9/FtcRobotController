@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.states;
 
-import org.firstinspires.ftc.teamcode.MovementHandler;
-import org.firstinspires.ftc.teamcode.VuforiaHandler;
-import org.firstinspires.ftc.teamcode.AbState;
+import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
+import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
 
 public class ShootState extends AbState {
     private VuforiaHandler vuforiaHandler;

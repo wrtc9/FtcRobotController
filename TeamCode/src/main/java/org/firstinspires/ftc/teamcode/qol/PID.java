@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.qol;
 // there should be a pid for linear, lateral, and rotational movement
 public class PID { // brug ftc has pidfs built in but theyre useless
     // a simple p controller which is just Math.signum(error) might be faster but less accurate, do that if tuning isn't working out well

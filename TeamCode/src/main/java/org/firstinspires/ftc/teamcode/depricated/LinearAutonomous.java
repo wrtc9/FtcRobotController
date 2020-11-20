@@ -1,19 +1,17 @@
 package org.firstinspires.ftc.teamcode.depricated;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.VuforiaHandler;
-import org.firstinspires.ftc.teamcode.depricated.Moveable;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Autonomous", group = "Linear OpMode")
 
 @Deprecated
+@Disabled
 public class LinearAutonomous extends LinearOpMode {
 
     private DcMotor leftFront;

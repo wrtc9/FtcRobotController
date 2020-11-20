@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.depricated;
 
-import org.firstinspires.ftc.teamcode.MovementHandler;
-import org.firstinspires.ftc.teamcode.VuforiaHandler;
-import org.firstinspires.ftc.teamcode.AbState;
+import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
+import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
+import org.firstinspires.ftc.teamcode.states.AbState;
 
 @Deprecated
 public class MoveToLocation extends AbState { // this class shouldn't be constructed with all of this special stuff, it should be a super class

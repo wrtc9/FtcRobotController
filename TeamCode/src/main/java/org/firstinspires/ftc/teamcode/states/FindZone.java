@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode.states;
 
-import org.firstinspires.ftc.teamcode.AbState;
-import org.firstinspires.ftc.teamcode.MovementHandler;
-import org.firstinspires.ftc.teamcode.Side;
-import org.firstinspires.ftc.teamcode.VuforiaHandler;
-import org.firstinspires.ftc.teamcode.WobbleSetting;
+import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
+import org.firstinspires.ftc.teamcode.qol.Side;
+import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
+import org.firstinspires.ftc.teamcode.qol.WobbleSetting;
 
 public class FindZone extends AbState { // this might be better if we use init with the next state (init is not guaranteed tho, so maybe this structure is better; look into it)
     private VuforiaHandler vuforiaHandler;

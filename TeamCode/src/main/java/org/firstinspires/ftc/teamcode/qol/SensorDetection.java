@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.qol;
 
 public enum SensorDetection {
     UP(new float[] {0, 1f}),

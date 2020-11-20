@@ -1,15 +1,13 @@
 package org.firstinspires.ftc.teamcode.states;
 
-import org.firstinspires.ftc.teamcode.MovementHandler;
-import org.firstinspires.ftc.teamcode.PID;
-import org.firstinspires.ftc.teamcode.SensorDetection;
-import org.firstinspires.ftc.teamcode.TelemetryInfo;
-import org.firstinspires.ftc.teamcode.VuforiaHandler;
-import org.firstinspires.ftc.teamcode.AbState;
+import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
+import org.firstinspires.ftc.teamcode.qol.PID;
+import org.firstinspires.ftc.teamcode.qol.SensorDetection;
+import org.firstinspires.ftc.teamcode.qol.TelemetryInfo;
+import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
 
 import java.util.EnumSet;
 import java.util.Locale;
-import java.util.concurrent.TimeoutException;
 
 // maybe change this to use inheritance
 public class MoveWithPID extends AbState { // this state will forever move closer to the desired target; add tolerance and switch

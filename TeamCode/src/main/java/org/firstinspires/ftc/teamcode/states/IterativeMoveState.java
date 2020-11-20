@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.states;
 
-import org.firstinspires.ftc.teamcode.AbState;
-import org.firstinspires.ftc.teamcode.SensorDetection;
+import org.firstinspires.ftc.teamcode.qol.SensorDetection;
 
 import java.util.EnumSet;
 
