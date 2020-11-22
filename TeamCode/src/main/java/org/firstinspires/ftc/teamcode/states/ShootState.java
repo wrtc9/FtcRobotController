@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.states;
 import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
 import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
 
-public class ShootState extends AbState {
+public class ShootState extends AbState { // robot does not have shooting altitude control, so change the default opmode to move in the position which hits the powershots
     private final MovementHandler movementHandler;
     private final AbState nextState;
 
@@ -26,6 +26,6 @@ public class ShootState extends AbState {
 
     @Override
     public void run() {
-        movementHandler.shoot(); // shoot needs to be defined
+        movementHandler.shoot(1, 1000); // shoot needs to be defined
     }
 }

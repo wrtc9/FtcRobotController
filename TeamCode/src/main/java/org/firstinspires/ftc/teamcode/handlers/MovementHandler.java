@@ -28,11 +28,14 @@ public class MovementHandler {
     private final DcMotor rightRear;
     private HashMap<String, DcMotor> drivetrain;
 
+    private final DcMotor flywheel;
+    private final DcMotor ramp;
+
     /*private double linEncoderCoef;
     private double latEncoderCoef;
     private double rotEncoderCoef;*/
 
-    public MovementHandler(){ // takes vuforiahandler?
+    public MovementHandler(){
         leftFront = hardwareMap.dcMotor.get("leftFront");
         rightFront = hardwareMap.dcMotor.get("rightFront");
         leftRear = hardwareMap.dcMotor.get("leftRear");
@@ -42,6 +45,12 @@ public class MovementHandler {
         drivetrain.put("rightFront", rightFront);
         drivetrain.put("leftRear", leftRear);
         drivetrain.put("rightRear", rightRear);
+
+        flywheel = hardwareMap.dcMotor.get("flywheel");
+        ramp = hardwareMap.dcMotor.get("ramp");
+
+        flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        ramp.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         /*try {
             FileInputStream fileIn = new FileInputStream("CalibrationInfo");
@@ -123,8 +132,16 @@ public class MovementHandler {
         rightRear.setTargetPosition(lin - lat + rot);
     }
 
-    public void shoot(){ // (double/float angle)
-        // shoots
+    public void shoot(double power, int time) {
+        ramp.setPower(1); // when should we turn off motors?
+        flywheel.setPower(power);
+        try {
+            wait(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ramp.setPower(0);
+        flywheel.setPower(0);
     }
 
     public double distanceTo(double x, double y){
