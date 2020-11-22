@@ -10,22 +10,12 @@ public class MoveAndShoot extends AbState { // this makes me want to kms
     private IterativeMoveState moveState;
     private ShootState shootState;
 
-    private final VuforiaHandler vuforiaHandler;
-    private final MovementHandler movementHandler;
-    private final Side side;
-
     private final AbState nextState;
 
     MoveAndShoot(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, AbState nextState, Side side) {
         super(name);
-        this.vuforiaHandler = vuforiaHandler;
-        this.movementHandler = movementHandler;
-        this.side = side;
         this.nextState = nextState;
-    }
 
-    @Override
-    public void init(AbState previousState) {
         Target target = Locations.POWER_SHOT_LINE.getLocation();
         Target translation = new Target(7.5f, 0f, 0f);
 
@@ -35,9 +25,13 @@ public class MoveAndShoot extends AbState { // this makes me want to kms
         }
 
         moveState = new IterativeMoveState("MoveAndShoot", target, translation, 3, shootState);
-        shootState = new ShootState("ShootState", vuforiaHandler, movementHandler, moveState);
+        shootState = new ShootState("ShootState", movementHandler, moveState);
         // with this structure we'll have to make multiple move and shoot states
         currentState = moveState;
+    }
+
+    @Override
+    public void init(AbState previousState) {
     }
 
     @Override

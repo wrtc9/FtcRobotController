@@ -39,6 +39,15 @@ public class MoveWithPID extends AbState { // this state will forever move close
         target.toMM();
 
         this.nextState = nextState;
+
+        linPID = new PID();
+        latPID = new PID();
+        rotPID = new PID();
+
+        telemetryObjs.add(linInfo);
+        telemetryObjs.add(latInfo);
+        telemetryObjs.add(rotInfo);
+        telemetryObjs.add(targetInfo);
     }
 
     protected MoveWithPID(String name, AbState nextState) { // used with MoveToAvoid
@@ -48,14 +57,6 @@ public class MoveWithPID extends AbState { // this state will forever move close
 
     @Override
     public void init(AbState previousState) {
-        linPID = new PID(); // reset pids here and init them in constructor?
-        latPID = new PID();
-        rotPID = new PID();
-
-        telemetryObjs.add(linInfo);
-        telemetryObjs.add(latInfo);
-        telemetryObjs.add(rotInfo);
-        telemetryObjs.add(targetInfo);
     }
 
     @Override

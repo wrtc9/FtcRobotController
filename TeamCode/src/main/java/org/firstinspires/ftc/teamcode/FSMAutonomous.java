@@ -61,18 +61,19 @@ public class FSMAutonomous extends OpMode {
         vuforiaHandler.update();
         defaultAuto.run();
 
+        // telemetry
         ArrayList<TelemetryInfo> telemetryObjs = defaultAuto.getTelemetry();
 
-        // telemetry
         telemetry.addData("CURRENT STATE", defaultAuto.getCurrentState().getName());
-        telemetry.addData("MOTOR LF", String.format(Locale.ENGLISH, "POS: %s, POW: %s", leftFront.getTargetPosition(), leftFront.getPower()));
-        telemetry.addData("MOTOR RF", String.format(Locale.ENGLISH, "POS: %s, POW: %s", rightFront.getTargetPosition(), rightFront.getPower()));
-        telemetry.addData("MOTOR LR", String.format(Locale.ENGLISH, "POS: %s, POW: %s", leftRear.getTargetPosition(), leftRear.getPower()));
-        telemetry.addData("MOTOR RR", String.format(Locale.ENGLISH, "POS: %s, POW: %s", rightRear.getTargetPosition(), rightRear.getPower()));
-        telemetry.update();
+        telemetry.addData("MOTOR LF POW:", leftFront.getPower());
+        telemetry.addData("MOTOR RF POW:", rightFront.getPower());
+        telemetry.addData("MOTOR LR POW:", leftRear.getPower());
+        telemetry.addData("MOTOR RR POW:", rightRear.getPower());
 
         for (TelemetryInfo telemetryInfo : telemetryObjs) {
             telemetry.addData(telemetryInfo.getCaption(), telemetryInfo.getFormat());
         }
+
+        telemetry.update();
     }
 }

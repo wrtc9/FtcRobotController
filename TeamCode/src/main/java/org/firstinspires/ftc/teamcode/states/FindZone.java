@@ -24,7 +24,6 @@ public class FindZone extends AbState { // this might be better if we use init w
 
     @Override
     public void init(AbState previousState) {
-
     }
 
     @Override

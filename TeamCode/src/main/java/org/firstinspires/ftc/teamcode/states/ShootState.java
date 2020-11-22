@@ -4,13 +4,11 @@ import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
 import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
 
 public class ShootState extends AbState {
-    private final VuforiaHandler vuforiaHandler;
     private final MovementHandler movementHandler;
     private final AbState nextState;
 
-    ShootState(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, AbState nextState) {
+    ShootState(String name, MovementHandler movementHandler, AbState nextState) {
         super(name);
-        this.vuforiaHandler = vuforiaHandler;
         this.movementHandler = movementHandler;
         this.nextState = nextState;
     }
