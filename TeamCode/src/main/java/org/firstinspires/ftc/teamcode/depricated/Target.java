@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.depricated;
 
 @Deprecated
-public class Target { // depricated
+public class Target { // deprecated, but sort of a good idea with the targetName
     private String name;
     private float[] xyz;
     private float[] rot;

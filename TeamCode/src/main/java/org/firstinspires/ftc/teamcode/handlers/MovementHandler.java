@@ -22,11 +22,11 @@ public class MovementHandler {
     }
     private Mode currentOpMode;
 
-    private DcMotor leftFront;
-    private DcMotor rightFront;
-    private DcMotor leftRear;
-    private DcMotor rightRear;
-    private HashMap<String, DcMotor> dcMotors;
+    private final DcMotor leftFront;
+    private final DcMotor rightFront;
+    private final DcMotor leftRear;
+    private final DcMotor rightRear;
+    private HashMap<String, DcMotor> drivetrain;
 
     /*private double linEncoderCoef;
     private double latEncoderCoef;
@@ -38,10 +38,10 @@ public class MovementHandler {
         leftRear = hardwareMap.dcMotor.get("leftRear");
         rightRear = hardwareMap.dcMotor.get("rightRear");
 
-        dcMotors.put("leftFront", leftFront);
-        dcMotors.put("rightFront", rightFront);
-        dcMotors.put("leftRear", leftRear);
-        dcMotors.put("rightRear", rightRear);
+        drivetrain.put("leftFront", leftFront);
+        drivetrain.put("rightFront", rightFront);
+        drivetrain.put("leftRear", leftRear);
+        drivetrain.put("rightRear", rightRear);
 
         /*try {
             FileInputStream fileIn = new FileInputStream("CalibrationInfo");
@@ -91,7 +91,7 @@ public class MovementHandler {
     }
 
     public void changeModes(DcMotor.RunMode runMode){
-        for (DcMotor dcMotor : dcMotors.values()) dcMotor.setMode(runMode);
+        for (DcMotor dcMotor : drivetrain.values()) dcMotor.setMode(runMode);
     }
 
     public void changeCurrentOpmode (Mode currentOpMode){
@@ -123,7 +123,7 @@ public class MovementHandler {
         rightRear.setTargetPosition(lin - lat + rot);
     }
 
-    public void shoot(){
+    public void shoot(){ // (double/float angle)
         // shoots
     }
 
@@ -137,7 +137,7 @@ public class MovementHandler {
     }
 
     public double[] errorTransformer(double x, double y, double r) { // rotates target around robot such that robot is facing forward for lack of a better way of saying it
-        // (if we didn't account for rotation, PIDs would not work; e.g. robot does not face the target)
+        // re-work this to return something like a Target
         double d = distanceTo(x, y);
         double theta = thetaTo(x, y, r);
         theta += 90 - r; // where the actual rotating happens
@@ -147,7 +147,7 @@ public class MovementHandler {
     }
 
     public DcMotor getDcMotor(String name){
-        return dcMotors.get(name);
+        return drivetrain.get(name);
     }
 
     public boolean isBusy(){

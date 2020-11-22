@@ -4,9 +4,9 @@ import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
 import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
 
 public class ShootState extends AbState {
-    private VuforiaHandler vuforiaHandler;
-    private MovementHandler movementHandler;
-    private AbState nextState;
+    private final VuforiaHandler vuforiaHandler;
+    private final MovementHandler movementHandler;
+    private final AbState nextState;
 
     ShootState(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, AbState nextState) {
         super(name);

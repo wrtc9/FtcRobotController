@@ -4,12 +4,13 @@ import org.firstinspires.ftc.teamcode.qol.Locations;
 import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
 import org.firstinspires.ftc.teamcode.qol.Side;
 import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
+import org.firstinspires.ftc.teamcode.qol.Target;
 
 public class MoveToWobbleZone extends AbState { // this can be done better
-    private VuforiaHandler vuforiaHandler;
-    private MovementHandler movementHandler;
-    private Side side;
-    private AbState nextState;
+    private final VuforiaHandler vuforiaHandler; // make these final someday
+    private final MovementHandler movementHandler;
+    private final Side side;
+    private final AbState nextState;
 
     private MoveWithPID moveToStack;
     private FindZone findZone;
@@ -25,7 +26,13 @@ public class MoveToWobbleZone extends AbState { // this can be done better
 
     @Override
     public void init(AbState previousState) {
-        moveToStack = new MoveWithPID("MoveToStack", vuforiaHandler, movementHandler, Locations.RING_STACK.getLocation(side), findZone);
+        Target target = Locations.RING_STACK.getLocation();
+
+        if (side == Side.RED) {
+            target = target.getMirroredTarget();
+        }
+
+        moveToStack = new MoveWithPID("MoveToStack", vuforiaHandler, movementHandler, target, findZone);
         findZone = new FindZone("FindZone", vuforiaHandler, movementHandler, side, rest);
         rest = new RestState("Rest");
     }
@@ -38,13 +45,6 @@ public class MoveToWobbleZone extends AbState { // this can be done better
         else {
             return this;
         }
-
-        // this scares me, maybe change it to return currentState.next();? after thinking about it, this wont help; the state above will still have to go through this state
-        // instead, think about end state maybe (when find zone ends), how do we translate this to next (add boolean isFinished();, this isn't satisfying either and won't work w/o another move child)
-        // if (!endCondition) { return currentState; }, this better preserves the structure, but endCondition is still unknown
-        // if (currentState != rest) { return currentState; }, better but still lacking
-        // we should refactor rest to end, do checks if currentState is end (but this should just be done inherently somehow)
-        // Q. How do we get end to indicate without ifs to stop running the state machine?
     }
 
     @Override

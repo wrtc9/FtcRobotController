@@ -3,17 +3,16 @@ package org.firstinspires.ftc.teamcode.states;
 import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
 import org.firstinspires.ftc.teamcode.qol.Side;
 import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
+import org.firstinspires.ftc.teamcode.qol.Target;
 import org.firstinspires.ftc.teamcode.qol.WobbleSetting;
 
 public class FindZone extends AbState { // this might be better if we use init with the next state (init is not guaranteed tho, so maybe this structure is better; look into it)
-    private VuforiaHandler vuforiaHandler;
-    private MovementHandler movementHandler;
-    private Side side;
-    private AbState nextState;
+    private final VuforiaHandler vuforiaHandler;
+    private final MovementHandler movementHandler;
+    private final Side side;
+    private final AbState nextState;
 
     private MoveWithPID moveToZone; // built in state
-
-    private WobbleSetting wobbleSetting;
 
     public FindZone(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, Side side, AbState nextState) {
         super(name);
@@ -31,12 +30,16 @@ public class FindZone extends AbState { // this might be better if we use init w
     @Override
     public AbState next() {
         return moveToZone;
-    }
+    } // immediately returns the state to move to the correct zone
 
     @Override
     public void run() {
-        wobbleSetting = movementHandler.findWobble();
-        float[] correctTarget = wobbleSetting.getTarget(side);
+        WobbleSetting wobbleSetting = movementHandler.findWobble();
+        Target correctTarget = wobbleSetting.getTarget(); // should this return a formatted sign for side
+
+        if (side == Side.RED) {
+            correctTarget = correctTarget.getMirroredTarget();
+        }
 
         moveToZone = new MoveWithPID("moveToZone", vuforiaHandler, movementHandler, correctTarget, nextState);
     }

@@ -5,9 +5,9 @@ import org.firstinspires.ftc.teamcode.qol.Side;
 import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
 
 public class DefaultAuto extends AbState {
-    private VuforiaHandler vuforiaHandler;
-    private MovementHandler movementHandler;
-    private Side side;
+    private final VuforiaHandler vuforiaHandler;
+    private final MovementHandler movementHandler;
+    private final Side side;
 
     private AbState moveAndShoot, moveToWobbleZone, rest;
 

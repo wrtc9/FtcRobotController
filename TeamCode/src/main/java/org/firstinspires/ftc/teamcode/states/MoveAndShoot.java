@@ -4,19 +4,17 @@ import org.firstinspires.ftc.teamcode.qol.Locations;
 import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
 import org.firstinspires.ftc.teamcode.qol.Side;
 import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
+import org.firstinspires.ftc.teamcode.qol.Target;
 
 public class MoveAndShoot extends AbState { // this makes me want to kms
     private IterativeMoveState moveState;
     private ShootState shootState;
 
-    private VuforiaHandler vuforiaHandler;
-    private MovementHandler movementHandler;
-    private Side side;
+    private final VuforiaHandler vuforiaHandler;
+    private final MovementHandler movementHandler;
+    private final Side side;
 
-    private AbState nextState;
-
-    private final float precision = 1f;
-    private final float mmPerIn = 25.4f;
+    private final AbState nextState;
 
     MoveAndShoot(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, AbState nextState, Side side) {
         super(name);
@@ -28,7 +26,15 @@ public class MoveAndShoot extends AbState { // this makes me want to kms
 
     @Override
     public void init(AbState previousState) {
-        moveState = new IterativeMoveState("MoveAndShoot", Locations.POWER_SHOT_LINE.getLocation(side), new float[]{7.5f * side.getSign(), 0f, 0f}, 3, shootState);
+        Target target = Locations.POWER_SHOT_LINE.getLocation();
+        Target translation = new Target(7.5f, 0f, 0f);
+
+        if (side == Side.RED) {
+            target = target.getMirroredTarget();
+            translation = translation.getMirroredTarget();
+        }
+
+        moveState = new IterativeMoveState("MoveAndShoot", target, translation, 3, shootState);
         shootState = new ShootState("ShootState", vuforiaHandler, movementHandler, moveState);
         // with this structure we'll have to make multiple move and shoot states
         currentState = moveState;
@@ -36,7 +42,7 @@ public class MoveAndShoot extends AbState { // this makes me want to kms
 
     @Override
     public AbState next() {
-        if (moveState.getRepetitions() >= 3){ // test this
+        if (currentState.getClass() == RestState.class){ // test this
             nextState.init(this); // would it be better for this to be inside iterative move state? (definitely do this, makes a lot of sense for the parent not to be inquiring about it)
             return nextState; // that would bring it in line with the idea of terminating machines
         }

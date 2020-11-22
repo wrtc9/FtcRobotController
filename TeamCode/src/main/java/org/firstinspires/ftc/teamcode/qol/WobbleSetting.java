@@ -13,8 +13,8 @@ public enum WobbleSetting {
         this.stackHeight = stackHeight;
     }
 
-    public float[] getTarget(Side side) {
-        return location.getLocation(side);
+    public Target getTarget() {
+        return location.getLocation();
     }
 
     public int getStackHeight() { // streamline this?

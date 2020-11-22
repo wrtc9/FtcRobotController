@@ -1,31 +1,73 @@
 package org.firstinspires.ftc.teamcode.qol;
 
-public class Target { // just adds a bit of length safety and readability, also can do cool stuff like multiplyBy
-    private final float[] target; // I want this to be immutable since that's the sorta way the states handle switching targets
+import java.util.function.Consumer;
+
+public class Target { // just adds a bit of length safety and readability, also can do cool stuff like toMM
+    // TODO: Better implement this type
+    private float x;
+    private float y;
+    private float r;
+
+    private float[] iterable;
 
     public Target (float x, float y, float r) {
-        target = new float[] {x, y, r};
+        r %= 360; // making sure r is in bounds
+
+        this.x = x;
+        this.y = y;
+        this.r = r;
+
+        iterable = new float[] {x, y, r};
     }
 
     public float getX() {
-        return target[0];
+        return x;
     }
 
     public float getY() {
-        return target[1];
+        return y;
     }
 
     public float getR() {
-        return target[2];
+        return r;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+        iterable[0] = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+        iterable[1] = y;
+    }
+
+    public void setR(float r) {
+        this.r = r;
+        iterable[2] = r;
     }
 
     public float[] getIterable() {
-        return target;
+        return iterable;
     }
 
-    public void multiplyBy (float coeff) {
-        for (int i = 0; i < 3; i++) {
-            target[i] *= coeff;
-        }
+    public void toMM () {
+        float mmPerIn = 25.4f;
+        x *= mmPerIn;
+        y *= mmPerIn;
+    }
+
+    public Target getMirroredTarget() { // idk about this, this should only be done on rising edge; or else it could return the formatted target w/o changing target
+        float formattedX = x;
+        float formattedR = r;
+
+        formattedX *= -1;
+        formattedR = (180 - formattedR) % 360;
+
+        return new Target(formattedX, y, formattedR);
+    }
+
+    public Target clone() {
+        return new Target(x, y, r);
     }
 }
