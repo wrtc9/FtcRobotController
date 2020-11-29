@@ -19,8 +19,7 @@ import java.util.ArrayList;
     - Consider a better way to pass handlers (hate to say it but maybe public handlers)
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "FSMAutonomous", group = "Autonomous")
-public class FSMAutonomous extends OpMode {
+public abstract class FSMAutonomous extends OpMode {
     public VuforiaHandler vuforiaHandler;
     public MovementHandler movementHandler;
 
@@ -35,6 +34,10 @@ public class FSMAutonomous extends OpMode {
     public Float robotY;
     public Float robotR; */
 
+    private final Side side = getSide();
+
+    protected abstract Side getSide();
+
     @Override
     public void init() {
         // initialize motors
@@ -46,7 +49,7 @@ public class FSMAutonomous extends OpMode {
         robotY = robotXYR.get(1);
         robotR =  robotXYR.get(2); */
 
-        defaultAuto = new DefaultAuto("default", vuforiaHandler, movementHandler, Side.BLUE); // edit side enum for different sides
+        defaultAuto = new DefaultAuto("default", vuforiaHandler, movementHandler, side); // edit side enum for different sides
         defaultAuto.init(null);
     }
 

@@ -24,12 +24,13 @@ public class MoveWithPID extends AbState { // this state will forever move close
     private Target target; // target must be in mm
     protected float robotX, robotY, robotR;
 
-    protected final float precision = 1f, sensorPrecision = 5f * 25.4f;
+    protected final float precision = 1f, sensorPrecision = 5f * 25.4f, robotWidth = 18f;
+    private final double mmPerDeg = (robotWidth / Math.sqrt(2)) * 2 * Math.PI / 360; // r multiplied by 2pi (to get circumference) divided by 360 for degrees
 
     private final TelemetryInfo linInfo = new TelemetryInfo("LINEAR_INPUT:"),
                                 latInfo = new TelemetryInfo("LATERAL_INPUT:"),
-                                rotInfo = new TelemetryInfo("ROTATIONAL_INPUT:");
-    private final TelemetryInfo targetInfo = new TelemetryInfo("TARGET:");
+                                rotInfo = new TelemetryInfo("ROTATIONAL_INPUT:"),
+                                targetInfo = new TelemetryInfo("TARGET:");
 
     MoveWithPID(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, Target target, AbState nextState) {
         super(name);
@@ -110,7 +111,7 @@ public class MoveWithPID extends AbState { // this state will forever move close
         double[] transformedError = movementHandler.errorTransformer(target.getX() - robotX, target.getY() - robotY, target.getR() - robotR); // make this better suited to the Target type
         float xError = (float) transformedError[0];
         float yError = (float) transformedError[1];
-        float rError = target.getY() - robotR;
+        float rError = (target.getY() - robotR) * (float) mmPerDeg; // multiplied by mmPerDeg for proper weighting
 
         latPID.update(xError);
         linPID.update(yError);
