@@ -38,6 +38,7 @@ public class DefaultAuto extends AbState {
         telemetryObjs.add(lfPowerInfo);
         telemetryObjs.add(rfPowerInfo);
         telemetryObjs.add(lrPowerInfo);
+        telemetryObjs.add(rrPowerInfo);
         telemetryObjs.add(currentPosInfo);
 
         leftFront = movementHandler.getDcMotor("leftFront");
