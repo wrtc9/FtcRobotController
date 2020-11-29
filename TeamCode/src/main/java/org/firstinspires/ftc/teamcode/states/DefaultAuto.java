@@ -11,7 +11,7 @@ import java.util.Locale;
 
 public class DefaultAuto extends AbState {
 
-    private AbState moveAndShoot, moveToWobbleZone, rest;
+    private AbState moveAndShoot, moveToWobbleZone, end;
 
     private final TelemetryInfo lfPowerInfo = new TelemetryInfo("LEFT FRONT POWER:"),
                                 rfPowerInfo = new TelemetryInfo("RIGHT FRONT POWER:"),
@@ -29,9 +29,9 @@ public class DefaultAuto extends AbState {
         this.vuforiaHandler = vuforiaHandler;
         this.movementHandler = movementHandler;
 
-        moveAndShoot = new MoveAndShoot("MoveAndShoot", vuforiaHandler, movementHandler, moveToWobbleZone, side);
-        moveToWobbleZone = new MoveToWobbleZone("MoveToWobbleZone", vuforiaHandler, movementHandler, side, rest);
-        rest = new EndState("Rest");
+        moveAndShoot = new MoveAndShoot("MoveAndShoot", vuforiaHandler, movementHandler, moveToWobbleZone, side); // maybe do moveToWobbleZone first
+        moveToWobbleZone = new MoveToWobbleZone("MoveToWobbleZone", vuforiaHandler, movementHandler, side, end);
+        end = new EndState("End");
         currentState = moveAndShoot;
 
         telemetryObjs.add(new TelemetryInfo("SIDE:", side.getName()));
@@ -53,7 +53,7 @@ public class DefaultAuto extends AbState {
 
     @Override
     public AbState next() {
-        if (currentState == rest) {
+        if (currentState == end) {
             return new EndState("End"); // for telemetry
         }
         return this;

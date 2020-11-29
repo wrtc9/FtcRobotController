@@ -11,7 +11,7 @@ public class MoveToWobbleZone extends AbState { // this can be done better
 
     private MoveWithPID moveToStack;
     private FindZone findZone;
-    private EndState rest;
+    private EndState end;
 
     MoveToWobbleZone(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, Side side, AbState nextState) { // move to stack, detect stack height, go to zone
         super(name);
@@ -24,8 +24,8 @@ public class MoveToWobbleZone extends AbState { // this can be done better
         }
 
         moveToStack = new MoveWithPID("MoveToStack", vuforiaHandler, movementHandler, target, findZone);
-        findZone = new FindZone("FindZone", vuforiaHandler, movementHandler, side, rest);
-        rest = new EndState("Rest");
+        findZone = new FindZone("FindZone", vuforiaHandler, movementHandler, side, end);
+        end = new EndState("End");
     }
 
     @Override
@@ -34,7 +34,7 @@ public class MoveToWobbleZone extends AbState { // this can be done better
 
     @Override
     public AbState next() {
-        if (currentState == rest) { // "terminates" state machine
+        if (currentState == end) { // "terminates" state machine
             return nextState;
         }
         else {

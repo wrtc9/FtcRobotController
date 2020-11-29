@@ -30,7 +30,7 @@ public class IterativeMoveState extends MoveWithPID { // need to change this to 
         EnumSet<SensorDetection> detections = movementHandler.getSensorDetections(sensorPrecision);
 
         if (repetitions > maxRepetitions) {
-            return new EndState("Rest");
+            return new EndState("End");
         }
         else if ((target.getX() - robotX) < precision && (target.getY() - robotY) < precision && (target.getR() - robotR) < precision){
             repetitions++;
