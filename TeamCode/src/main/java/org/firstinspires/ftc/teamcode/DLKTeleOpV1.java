@@ -53,6 +53,11 @@ public class DLKTeleOpV1 extends OpMode {
 		lt = deadzone(gamepad1.left_trigger, .1);
 		rotation = (rt - lt);
 		movementHandler.move(xCheck, yCheck, rotation);
+		if(gamepad1.right_bumper) {
+			movementHandler.shoot;
+		} else {
+			//don't shoot
+		}
 	}
 
 	//Checks to see if the value is above a certain threshold so that we can have a deadzone on the joystick and triggers
