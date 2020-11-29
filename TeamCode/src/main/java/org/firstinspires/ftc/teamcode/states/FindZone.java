@@ -14,7 +14,7 @@ public class FindZone extends AbState { // this might be better if we use init w
 
     private MoveWithPID moveToZone; // built in state
 
-    public FindZone(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, Side side, AbState nextState) {
+    FindZone(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, Side side, AbState nextState) {
         super(name);
         this.vuforiaHandler = vuforiaHandler;
         this.movementHandler = movementHandler;

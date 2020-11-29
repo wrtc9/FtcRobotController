@@ -36,8 +36,7 @@ public class MoveAndShoot extends AbState { // this makes me want to kms
 
     @Override
     public AbState next() {
-        if (currentState.getClass() == RestState.class){ // test this
-            nextState.init(this); // would it be better for this to be inside iterative move state? (definitely do this, makes a lot of sense for the parent not to be inquiring about it)
+        if (currentState.getClass() == EndState.class){ // test this
             return nextState; // that would bring it in line with the idea of terminating machines
         }
         else {
@@ -47,9 +46,6 @@ public class MoveAndShoot extends AbState { // this makes me want to kms
 
     @Override
     public void run() {
-        currentState.run();
-        currentState = currentState.next();
-
-        telemetryObjs = currentState.getTelemetry();
+        runMachine();
     }
 }

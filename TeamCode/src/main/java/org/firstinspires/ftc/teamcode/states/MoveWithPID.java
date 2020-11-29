@@ -26,8 +26,10 @@ public class MoveWithPID extends AbState { // this state will forever move close
 
     protected final float precision = 1f, sensorPrecision = 5f * 25.4f;
 
-    private final TelemetryInfo linInfo = new TelemetryInfo("LINEAR_INPUT"), latInfo = new TelemetryInfo("LATERAL_INPUT"), rotInfo = new TelemetryInfo("ROTATIONAL_INPUT");
-    private final TelemetryInfo targetInfo = new TelemetryInfo("TARGET");
+    private final TelemetryInfo linInfo = new TelemetryInfo("LINEAR_INPUT:"),
+                                latInfo = new TelemetryInfo("LATERAL_INPUT:"),
+                                rotInfo = new TelemetryInfo("ROTATIONAL_INPUT:");
+    private final TelemetryInfo targetInfo = new TelemetryInfo("TARGET:");
 
     MoveWithPID(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, Target target, AbState nextState) {
         super(name);
@@ -64,7 +66,6 @@ public class MoveWithPID extends AbState { // this state will forever move close
         EnumSet<SensorDetection> detections = movementHandler.getSensorDetections(sensorPrecision);
 
         if (distanceCheck(precision)){
-            nextState.init(this);
             return nextState;
         }
 
@@ -94,7 +95,7 @@ public class MoveWithPID extends AbState { // this state will forever move close
         rotPID.reset();
     }
 
-    protected boolean distanceCheck(float precision) {
+    protected boolean distanceCheck(float precision) { // this could probably be made a little better
         return (target.getX() - robotX) < precision && (target.getY() - robotY) < precision && (target.getR() - robotR) < precision;
     }
 
@@ -119,11 +120,11 @@ public class MoveWithPID extends AbState { // this state will forever move close
         float latIn = latPID.getInput();
         float rotIn = rotPID.getInput();
 
-        linInfo.setFormat(String.valueOf(linIn));
-        latInfo.setFormat(String.valueOf(latIn));
-        rotInfo.setFormat(String.valueOf(rotIn));
+        linInfo.setContent(String.valueOf(linIn));
+        latInfo.setContent(String.valueOf(latIn));
+        rotInfo.setContent(String.valueOf(rotIn));
 
-        targetInfo.setFormat(String.format(Locale.ENGLISH,"X: %f, Y: %f, R: %f", target.getX(), target.getY(), target.getR()));
+        targetInfo.setContent(String.format(Locale.ENGLISH,"X: %f, Y: %f, R: %f", target.getX(), target.getY(), target.getR()));
 
         movementHandler.move(linIn, latIn, rotIn, 100); // need to define exit conditions
     }

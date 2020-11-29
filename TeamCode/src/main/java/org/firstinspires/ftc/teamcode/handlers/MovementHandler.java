@@ -16,11 +16,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 
 public class MovementHandler {
 
-    public enum Mode { // maybe change this to just use FTC's default enums
-        RUN_WITH_ENCODERS,
-        RUN_WITHOUT_ENCODERS
-    }
-    private Mode currentOpMode;
+    private DcMotor.RunMode currentMode;
 
     private final DcMotor leftFront;
     private final DcMotor rightFront;
@@ -71,13 +67,13 @@ public class MovementHandler {
         }*/
     }
 
-    public void move(double lin, double lat, double rot){ // if you know for certain that abs(lin + lat + rot) < 1
+    public void move(double lin, double lat, double rot){ // though both move methods would work, this one might be better for TeleOp
 
-        if (currentOpMode != Mode.RUN_WITHOUT_ENCODERS) {
-            changeCurrentOpmode(Mode.RUN_WITHOUT_ENCODERS);
+        if (currentMode != DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
+            changeCurrentMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-        leftFront.setPower(lin - lat - rot);
+        leftFront.setPower(lin - lat - rot); // total has to be on [-1,1]
         rightFront.setPower(lin + lat + rot);
         leftRear.setPower(lin + lat - rot);
         rightRear.setPower(lin - lat + rot);
@@ -85,32 +81,32 @@ public class MovementHandler {
 
     public void move(double lin, double lat, double rot, int weight){ // weight is a bit like speed in a sense
 
-        if (currentOpMode != Mode.RUN_WITHOUT_ENCODERS) {
-            changeCurrentOpmode(Mode.RUN_WITHOUT_ENCODERS);
+        if (currentMode != DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
+            changeCurrentMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-        leftFront.setPower(sigmoid(lin - lat - rot, weight));
-        rightFront.setPower(sigmoid(lin + lat + rot, weight));
-        leftRear.setPower(sigmoid(lin + lat - rot, weight));
-        rightRear.setPower(sigmoid(lin - lat + rot, weight));
+        double total = lin + lat + rot;
+
+        leftFront.setPower(sigmoid(total, weight) * ((lin - lat - rot) / total));
+        rightFront.setPower(sigmoid(total, weight) * ((lin + lat + rot) / total));
+        leftRear.setPower(sigmoid(total, weight) * ((lin + lat - rot) / total));
+        rightRear.setPower(sigmoid(total, weight) * ((lin - lat + rot) / total));
     }
 
-    public double sigmoid(double x, int weight) { // add in a coefficient of x
-        return 2 / (1 + Math.exp(x / weight)) - 1;
-    }
+    public double sigmoid(double x, int weight) {
+        return 2 / (1 + Math.exp(-x / weight)) + 1;
+    } // make sure power can actually be negative
 
     public void changeModes(DcMotor.RunMode runMode){
         for (DcMotor dcMotor : drivetrain.values()) dcMotor.setMode(runMode);
     }
 
-    public void changeCurrentOpmode (Mode currentOpMode){
-        if (currentOpMode == Mode.RUN_WITH_ENCODERS){
+    public void changeCurrentMode (DcMotor.RunMode mode){
+        if (mode == DcMotor.RunMode.RUN_USING_ENCODER) {
             changeModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            changeModes(DcMotor.RunMode.RUN_TO_POSITION);
         }
-        else {
-            changeModes(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
+        changeModes(mode);
+        currentMode = mode;
     }
 
     /*public void moveWithEncoders(double linMM, double latMM, double rotMM){
@@ -122,8 +118,8 @@ public class MovementHandler {
     }*/
 
     public void moveWithTicks(int lin, int lat, int rot){ // this might break
-        if (currentOpMode != Mode.RUN_WITH_ENCODERS){
-            changeCurrentOpmode(Mode.RUN_WITH_ENCODERS);
+        if (currentMode != DcMotor.RunMode.RUN_USING_ENCODER){ // this should probably be removed
+            changeCurrentMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
         leftFront.setTargetPosition(lin - lat - rot);
@@ -153,7 +149,7 @@ public class MovementHandler {
         return (y > 0) ? rawTheta : -rawTheta;
     }
 
-    public double[] errorTransformer(double x, double y, double r) { // rotates target around robot such that robot is facing forward for lack of a better way of saying it
+    public double[] errorTransformer(double x, double y, double r) { // converts to polar, adds to theta, converts back
         // re-work this to return something like a Target
         double d = distanceTo(x, y);
         double theta = thetaTo(x, y, r);

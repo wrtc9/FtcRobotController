@@ -15,12 +15,10 @@ public class ShootState extends AbState { // robot does not have shooting altitu
 
     @Override
     public void init(AbState previousState) {
-        // init motors and such here
     }
 
     @Override
     public AbState next() {
-        nextState.init(this);
         return nextState;
     }
 

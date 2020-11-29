@@ -7,11 +7,14 @@ import java.util.ArrayList;
 public abstract class AbState { // this is basically a decorator pattern
     protected String name;
     protected AbState currentState = this;
+    protected AbState previousState;
 
     protected ArrayList<TelemetryInfo> telemetryObjs;
 
     public AbState(String name){
         this.name = name;
+
+        telemetryObjs.add(new TelemetryInfo("STATE:", name));
     } // maybe add handlers to constructor
 
     public String getName() {
@@ -34,5 +37,19 @@ public abstract class AbState { // this is basically a decorator pattern
 
     public ArrayList<TelemetryInfo> getTelemetry() {
         return telemetryObjs;
+    }
+
+    protected void runMachine() {
+        currentState.run();
+
+        previousState = currentState;
+        currentState = currentState.next();
+
+        if (previousState != currentState) {
+            currentState.init(previousState);
+
+            telemetryObjs.removeAll(previousState.getTelemetry()); // this will allow intermediate states to add telemetry
+            telemetryObjs.addAll(currentState.getTelemetry());
+        }
     }
 }

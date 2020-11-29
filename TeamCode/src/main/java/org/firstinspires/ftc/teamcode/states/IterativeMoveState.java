@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.states;
 
 import org.firstinspires.ftc.teamcode.qol.SensorDetection;
 import org.firstinspires.ftc.teamcode.qol.Target;
+import org.firstinspires.ftc.teamcode.qol.TelemetryInfo;
 
 import java.util.EnumSet;
 
@@ -12,12 +13,16 @@ public class IterativeMoveState extends MoveWithPID { // need to change this to 
     private int repetitions = 0;
     private final int maxRepetitions;
 
+    private TelemetryInfo repetitionsInfo = new TelemetryInfo("REPETITIONS", "0");
+
     protected IterativeMoveState(String name, Target start, Target translation, int maxRepetitions, AbState nextState) {
         super(name, nextState);
 
         this.target = start;
         this.translation = translation;
         this.maxRepetitions = maxRepetitions;
+
+        telemetryObjs.add(repetitionsInfo);
     }
 
 
@@ -25,11 +30,11 @@ public class IterativeMoveState extends MoveWithPID { // need to change this to 
         EnumSet<SensorDetection> detections = movementHandler.getSensorDetections(sensorPrecision);
 
         if (repetitions > maxRepetitions) {
-            return new RestState("Rest");
+            return new EndState("Rest");
         }
         else if ((target.getX() - robotX) < precision && (target.getY() - robotY) < precision && (target.getR() - robotR) < precision){
-            nextState.init(this);
             repetitions++;
+            repetitionsInfo.setContent(String.valueOf(repetitions));
 
             target.setX(target.getX() + translation.getX());
             target.setY(target.getY() + translation.getY());

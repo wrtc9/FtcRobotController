@@ -11,9 +11,9 @@ public class MoveToWobbleZone extends AbState { // this can be done better
 
     private MoveWithPID moveToStack;
     private FindZone findZone;
-    private RestState rest;
+    private EndState rest;
 
-    public MoveToWobbleZone(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, Side side, AbState nextState) { // move to stack, detect stack height, go to zone
+    MoveToWobbleZone(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, Side side, AbState nextState) { // move to stack, detect stack height, go to zone
         super(name);
         this.nextState = nextState;
 
@@ -25,7 +25,7 @@ public class MoveToWobbleZone extends AbState { // this can be done better
 
         moveToStack = new MoveWithPID("MoveToStack", vuforiaHandler, movementHandler, target, findZone);
         findZone = new FindZone("FindZone", vuforiaHandler, movementHandler, side, rest);
-        rest = new RestState("Rest");
+        rest = new EndState("Rest");
     }
 
     @Override
@@ -34,7 +34,7 @@ public class MoveToWobbleZone extends AbState { // this can be done better
 
     @Override
     public AbState next() {
-        if (currentState == rest) {
+        if (currentState == rest) { // "terminates" state machine
             return nextState;
         }
         else {
@@ -44,9 +44,6 @@ public class MoveToWobbleZone extends AbState { // this can be done better
 
     @Override
     public void run() {
-        currentState.run();
-        currentState = currentState.next(); // this is just covering it in another layer
-
-        telemetryObjs = currentState.getTelemetry();
+        runMachine();
     }
 }

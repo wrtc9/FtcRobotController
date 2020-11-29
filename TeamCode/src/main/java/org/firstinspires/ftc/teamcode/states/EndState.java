@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.states;
 
-public class RestState extends AbState {
-    RestState(String name) {
+public class EndState extends AbState {
+    EndState(String name) {
         super(name);
     }
 
     @Override
     public void init(AbState previousState) {
-
     }
 
     @Override

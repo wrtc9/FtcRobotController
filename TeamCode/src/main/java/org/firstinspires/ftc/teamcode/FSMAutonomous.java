@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.qol.TelemetryInfo;
 import org.firstinspires.ftc.teamcode.states.DefaultAuto;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 /* TODO
     - Tune PID
@@ -47,11 +46,6 @@ public class FSMAutonomous extends OpMode {
         robotY = robotXYR.get(1);
         robotR =  robotXYR.get(2); */
 
-        leftFront = movementHandler.getDcMotor("leftFront");
-        rightFront = movementHandler.getDcMotor("rightFront");
-        leftRear = movementHandler.getDcMotor("leftRear");
-        rightRear = movementHandler.getDcMotor("rightRear");
-
         defaultAuto = new DefaultAuto("default", vuforiaHandler, movementHandler, Side.BLUE); // edit side enum for different sides
         defaultAuto.init(null);
     }
@@ -64,14 +58,8 @@ public class FSMAutonomous extends OpMode {
         // telemetry
         ArrayList<TelemetryInfo> telemetryObjs = defaultAuto.getTelemetry();
 
-        telemetry.addData("CURRENT STATE", defaultAuto.getCurrentState().getName());
-        telemetry.addData("MOTOR LF POW:", leftFront.getPower());
-        telemetry.addData("MOTOR RF POW:", rightFront.getPower());
-        telemetry.addData("MOTOR LR POW:", leftRear.getPower());
-        telemetry.addData("MOTOR RR POW:", rightRear.getPower());
-
         for (TelemetryInfo telemetryInfo : telemetryObjs) {
-            telemetry.addData(telemetryInfo.getCaption(), telemetryInfo.getFormat());
+            telemetry.addData(telemetryInfo.getCaption(), telemetryInfo.getContent());
         }
 
         telemetry.update();

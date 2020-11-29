@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.states;
 
 import org.firstinspires.ftc.teamcode.qol.SensorDetection;
 import org.firstinspires.ftc.teamcode.qol.Target;
+import org.firstinspires.ftc.teamcode.qol.TelemetryInfo;
 
 import java.util.EnumSet;
 
@@ -16,6 +17,9 @@ public class MoveToAvoid extends MoveWithPID { // edit this so that the robot do
     private EnumSet<SensorDetection> previousDetections;
     private SensorDetection bestDirection;
 
+    private final TelemetryInfo avoidanceInfo = new TelemetryInfo("AVOIDING:"),
+                                detectionInfo = new TelemetryInfo("DETECTIONS:");
+
     protected MoveToAvoid(String name, AbState nextState, Target target) {
         super(name, nextState);
         this.target = target;
@@ -23,7 +27,6 @@ public class MoveToAvoid extends MoveWithPID { // edit this so that the robot do
 
     public AbState next() {
         if (distanceCheck(precision)){ // not sure if distance check will work properly
-            nextState.init(this);
             return nextState;
         }
 
@@ -62,6 +65,9 @@ public class MoveToAvoid extends MoveWithPID { // edit this so that the robot do
         if (!detections.isEmpty()) { // if there are still blocked sides, move to the side which is closest to the target
             detour = bestDirection.getDetour(currentPosition);
         }
+
+        avoidanceInfo.setContent(bestDirection.toString());
+        detectionInfo.setContent(detections.toString()); // hopefully this will work
 
         previousDetections = detections;
         return detour;
