@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode.qol;
 
+/**
+ * TelemetryInfo provides a standardized format for telemetry storage. TelemetryInfo is mutable.
+ *
+ * @author Will (wrtc9)
+ */
 public class TelemetryInfo { // this is kinda stupid but oh well
     private String caption;
     private String content = "Unset";

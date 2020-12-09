@@ -6,6 +6,12 @@ import org.firstinspires.ftc.teamcode.qol.TelemetryInfo;
 
 import java.util.EnumSet;
 
+/**
+ * MoveToAvoid runs when the robot hits an obstacle. The class checks which sides are obscured and
+ * then moves to the detour which is closest to the ultimate target. The best side to avoid to is
+ * recalculated every time another obstacle is found. This class extends {@link MoveWithPID MoveWithPID}.
+ * @author Will (wrtc9)
+ */
 public class MoveToAvoid extends MoveWithPID { // edit this so that the robot doesn't go back and forth; also make this work better with the new Target type
 
     private final Target target; // this is going to be where MoveWithPID wants to go

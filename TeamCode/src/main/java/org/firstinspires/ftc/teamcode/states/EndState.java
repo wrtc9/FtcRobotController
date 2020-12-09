@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.states;
 
+/**
+ * EndState does nothing
+ * @author Will (wrtc9)
+ */
 public class EndState extends AbState {
     EndState(String name) {
         super(name);

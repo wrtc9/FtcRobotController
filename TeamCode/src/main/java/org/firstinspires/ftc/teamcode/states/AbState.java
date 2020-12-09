@@ -4,6 +4,11 @@ import org.firstinspires.ftc.teamcode.qol.TelemetryInfo;
 
 import java.util.ArrayList;
 
+/**
+ * AbState provides the blue prints to a state
+ *
+ * @author Will (wrtc9)
+ */
 public abstract class AbState { // this is basically a decorator pattern
     protected String name;
     protected AbState currentState = this;
@@ -31,6 +36,11 @@ public abstract class AbState { // this is basically a decorator pattern
         return telemetryObjs;
     }
 
+    /**
+     * Runs a state machine using currentState; handles how telemetry is passed upwards
+     *
+     * @author Will (wrtc9)
+     */
     protected void runMachine() {
         currentState.run();
 

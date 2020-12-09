@@ -6,6 +6,11 @@ import org.firstinspires.ftc.teamcode.qol.Side;
 import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
 import org.firstinspires.ftc.teamcode.qol.Target;
 
+/**
+ * MoveAndShoot uses runMachine to move to each powershot and shoot. Uses
+ * {@link IterativeMoveState IterativeMoveState} and {@link ShootState ShootState}.
+ * @author Will (wrtc9)
+ */
 public class MoveAndShoot extends AbState { // this makes me want to kms
     private IterativeMoveState moveState;
     private ShootState shootState;

@@ -6,6 +6,12 @@ import org.firstinspires.ftc.teamcode.qol.Side;
 import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
 import org.firstinspires.ftc.teamcode.qol.Target;
 
+/**
+ * MoveToWobbleZone checks the central ring stack and moves to where it is destined. This class uses
+ * {@link MoveWithPID MoveWithPID}, {@link FindZone FindZone}, and {@link EndState EndState}.
+ *
+ * @author Will (wrtc9)
+ */
 public class MoveToWobbleZone extends AbState { // this can be done better
     private final AbState nextState;
 

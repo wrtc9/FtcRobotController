@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode.qol;
 
+/**
+ * Enum for starting side of robot
+ *
+ * @author Will (wrtc9)
+ */
 public enum Side {
     BLUE("Blue"),
     RED("Red"); // red is just blue mirrored across y axis (-x)

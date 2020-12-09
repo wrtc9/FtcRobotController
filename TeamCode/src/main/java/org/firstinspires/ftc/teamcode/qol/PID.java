@@ -1,5 +1,11 @@
 package org.firstinspires.ftc.teamcode.qol;
 // there should be a pid for linear, lateral, and rotational movement
+
+/**
+ * The PID class provides an easy way to implement a <a href="https://en.wikipedia.org/wiki/PID_controller">PID Controller</a>.
+ *
+ * @author Will (wrtc9)
+ */
 public class PID { // brug ftc has pidfs built in but theyre useless
     // a simple p controller which is just Math.signum(error) might be faster but less accurate, do that if tuning isn't working out well
     private float pastError = 0;
@@ -12,6 +18,13 @@ public class PID { // brug ftc has pidfs built in but theyre useless
 
     private float input;
 
+    /**
+     * Constructor for custom coefficients
+     * @param kP proportion coefficient
+     * @param kI integral coefficient
+     * @param kD derivative coefficient
+     * @author Will (wrtc9)
+     */
     public PID(float kP, float kI, float kD) {
         this.kP = kP;
         this.kI = kI;

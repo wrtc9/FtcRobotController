@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode.qol;
 
+/**
+ * Locations is an enum that stores useful locations of the playing field.
+ *
+ * @author Will (wrtc9)
+ */
 public enum Locations {
     ORIGIN(new Target(0f, 0f, 0f)),
     A(new Target(-60.1875f, -1.25f, 90f)),

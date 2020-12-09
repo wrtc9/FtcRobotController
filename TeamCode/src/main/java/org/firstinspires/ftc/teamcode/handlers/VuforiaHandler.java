@@ -23,6 +23,13 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
+/**
+ * Class VuforiaHandler handles everything that is related to Vuforia. Check the {@link org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaUltimateGoalNavigation FTC example} which
+ * this heavily takes after to learn more. Currently, Vuforia is instantiated, but in the future it
+ * could be made static, like MovementHandler.
+ *
+ * @author Will Terrell (wrtc9)
+ */
 public class VuforiaHandler { // 0, 0, 0 is the middle of the field looking at blue alliance target
     private final static float mmPerInch = 25.4f; //constants and stuff
     private final static float targetHeight = 6 * mmPerInch;

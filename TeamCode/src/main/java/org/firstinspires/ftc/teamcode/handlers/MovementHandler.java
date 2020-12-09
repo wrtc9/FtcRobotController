@@ -14,7 +14,14 @@ import java.util.HashMap;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
-public class MovementHandler {
+/**
+ * The MovementHandler class provides a central location for all movement-related as well as a
+ * couple data-related methods. Currently, MovementHandler is instantiated, but in the future,
+ * functionality could be made static.
+ *
+ * @author Will (wrtc9)
+ */
+public class MovementHandler { // make this static
 
     private DcMotor.RunMode currentMode;
 
@@ -31,7 +38,7 @@ public class MovementHandler {
     private double latEncoderCoef;
     private double rotEncoderCoef;*/
 
-    public MovementHandler(){
+    public MovementHandler(){ // this will turn into a static block
         leftFront = hardwareMap.dcMotor.get("leftFront");
         rightFront = hardwareMap.dcMotor.get("rightFront");
         leftRear = hardwareMap.dcMotor.get("leftRear");
@@ -79,6 +86,18 @@ public class MovementHandler {
         rightRear.setPower(lin - lat + rot);
     }
 
+    /**
+     * Move sets the powers of all drive train motors using the parameters lin, lat, rot, and
+     * weight. Lin, lat, and rot are summed up (with positive or negative coefficients based on the
+     * wheels) and multiplied by the <a href="https://en.wikipedia.org/wiki/Sigmoid_function">sigmoid</a>
+     * of the total (sigmoid is translated to range from -1 to 1).
+     *
+     * @author Will (wrtc9)
+     * @param lin linear component of the robot speed
+     * @param lat lateral component of the robot speed
+     * @param rot rotational component of the robot speed
+     * @param weight weights sigmoid; input to sigmoid function is divided by weight
+     */
     public void move(double lin, double lat, double rot, int weight){ // weight is a bit like speed in a sense
 
         if (currentMode != DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
@@ -149,10 +168,20 @@ public class MovementHandler {
         return (y > 0) ? rawTheta : -rawTheta;
     }
 
+    /**
+     * ErrorTransformer converts a set of coordinates to polar and then adds the complement of r.
+     * Practically, this is used to rotate a target point around the robot so the robot is virtually
+     * facing towards positive y. This, fixes an issue with x and y error.
+     *
+     * @author Will (wrtc9)
+     * @param x x distance between robot and target
+     * @param y y distance between robot and target
+     * @param r rotation of the robot
+     */
     public double[] errorTransformer(double x, double y, double r) { // converts to polar, adds to theta, converts back
         // re-work this to return something like a Target
         double d = distanceTo(x, y);
-        double theta = thetaTo(x, y, r);
+        double theta = thetaTo(x, y, d);
         theta += 90 - r; // where the actual rotating happens
         double newX = Math.cos(theta) * d;
         double newY = Math.sin(theta) * d;
@@ -171,6 +200,13 @@ public class MovementHandler {
         return null;
     }
 
+    /**
+     * GetSensorDetections finds which sensors detect an object within a distance of the variable
+     * precision.
+     *
+     * @author Will (wrtc9)
+     * @param precision how close an object must be before it is avoided
+     */
     public EnumSet<SensorDetection> getSensorDetections(float precision) { // set
         return null;
     }

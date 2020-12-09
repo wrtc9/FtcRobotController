@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode.qol;
 
+/**
+ * The WobbleSetting enum correlates stack height to the specified wobble zone.
+ *
+ * @author Will (wrtc9)
+ */
 public enum WobbleSetting {
     C(Locations.C, 4), // defaults for blue side, change x and r for red
     B(Locations.B, 1),

@@ -2,6 +2,12 @@ package org.firstinspires.ftc.teamcode.qol;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * SensorDetection is an enum for sensor detections and sensors in general. Used typically in an
+ * EnumSet.
+ *
+ * @author Will (wrtc9)
+ */
 public enum SensorDetection {
     UP(0, 1f, "UP"),
     DOWN(0, -1f, "DOWN"),

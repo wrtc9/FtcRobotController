@@ -6,6 +6,13 @@ import org.firstinspires.ftc.teamcode.qol.TelemetryInfo;
 
 import java.util.EnumSet;
 
+/**
+ * IterativeMoveState moves, then performs the next state, then moves again until the max
+ * repetitions has been reached. This class is used to move between the powershots. This class
+ * extends {@link MoveWithPID MoveWithPID}.
+ *
+ * @author Will (wrtc9)
+ */
 public class IterativeMoveState extends MoveWithPID { // need to change this to be in line with MoveAndAvoid
     private final Target translation;
     private final Target target;

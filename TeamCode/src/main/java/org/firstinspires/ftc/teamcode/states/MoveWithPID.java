@@ -10,6 +10,12 @@ import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
 import java.util.EnumSet;
 import java.util.Locale;
 
+/**
+ * MoveWithPID uses PIDs to move directly to the specified target. It is also the super class to
+ * {@link IterativeMoveState IterativeMoveState} and {@link MoveToAvoid MoveToAvoid}.
+ *
+ * @author Will (wrtc9)
+ */
 // maybe change this to use inheritance
 public class MoveWithPID extends AbState { // this state will forever move closer to the desired target; add tolerance and switch
     // TODO: Clean this up and check
@@ -86,6 +92,12 @@ public class MoveWithPID extends AbState { // this state will forever move close
         this.target = target;
     }
 
+    /**
+     * getTarget is designed to be overridden by a sub-class to dynamically change the target
+     * position.
+     * @return Target position
+     * @author Will (wrtc9)
+     */
     protected Target getTarget() { // instead of having a MoveToAvoid class which extends this class, we could make a set target method which sets the target and resets the controllers and have the target be controlled from the outside
         return target;
     }
@@ -108,7 +120,7 @@ public class MoveWithPID extends AbState { // this state will forever move close
 
         target = getTarget();
 
-        double[] transformedError = movementHandler.errorTransformer(target.getX() - robotX, target.getY() - robotY, target.getR() - robotR); // make this better suited to the Target type
+        double[] transformedError = movementHandler.errorTransformer(target.getX() - robotX, target.getY() - robotY, robotR); // make this better suited to the Target type
         float xError = (float) transformedError[0];
         float yError = (float) transformedError[1];
         float rError = (target.getY() - robotR) * (float) mmPerDeg; // multiplied by mmPerDeg for proper weighting

@@ -19,6 +19,12 @@ import java.util.ArrayList;
     - Consider a better way to pass handlers (hate to say it but maybe public handlers)
  */
 
+/**
+ * FSMAutonomous iteratively runs {@link DefaultAuto DefaultAuto}; FSMAutonomous is abstract so BlueAuto and RedAuto can
+ * specify which side to run the program on.
+ *
+ * @author Will (wrtc9)
+ */
 public abstract class FSMAutonomous extends OpMode {
     public VuforiaHandler vuforiaHandler;
     public MovementHandler movementHandler;

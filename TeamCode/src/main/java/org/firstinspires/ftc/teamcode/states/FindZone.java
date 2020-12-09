@@ -6,6 +6,10 @@ import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
 import org.firstinspires.ftc.teamcode.qol.Target;
 import org.firstinspires.ftc.teamcode.qol.WobbleSetting;
 
+/**
+ * FindZone builds the move state that goes to the wobble zone and returns it through next
+ * @author Will (wrtc9)
+ */
 public class FindZone extends AbState { // this might be better if we use init with the next state (init is not guaranteed tho, so maybe this structure is better; look into it)
     private final VuforiaHandler vuforiaHandler;
     private final MovementHandler movementHandler;

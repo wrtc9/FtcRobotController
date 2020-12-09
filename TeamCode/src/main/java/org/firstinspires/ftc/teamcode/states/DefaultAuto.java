@@ -9,6 +9,13 @@ import org.firstinspires.ftc.teamcode.qol.TelemetryInfo;
 
 import java.util.Locale;
 
+/**
+ * DefaultAuto when, ran iteratively, shoots rings at each powershot, moves the wobble goal to the
+ * necessary destination, and stops. This class uses {@link MoveAndShoot MoveAndShoot},
+ * {@link MoveToWobbleZone MoveToWobbleZone}, and {@link EndState EndState}.
+ *
+ * @author Will (wrtc9)
+ */
 public class DefaultAuto extends AbState {
 
     private AbState moveAndShoot, moveToWobbleZone, end;
