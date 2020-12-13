@@ -26,6 +26,8 @@ public class DLKTeleOpV1 extends OpMode {
 	private double yCheck;
 	private double rt;
 	private double lt;
+	private double shootPower;
+	private int shootTime;
 	
 	@Override
 	public void init() {
@@ -43,6 +45,8 @@ public class DLKTeleOpV1 extends OpMode {
 		lt = 0;
 		xCheck = 0;
 		yCheck = 0;
+		shootPower = 1;
+		shootTime = 1;
 	}
 	
 	@Override
@@ -54,7 +58,7 @@ public class DLKTeleOpV1 extends OpMode {
 		rotation = (rt - lt);
 		movementHandler.move(xCheck, yCheck, rotation);
 		if(gamepad1.right_bumper) {
-			movementHandler.shoot;
+			//movementHandler.shoot(shootPower,shootTime); Commented out until the shoot method is implemented in the movement handler of this branch
 		} else {
 			//don't shoot
 		}
