@@ -38,8 +38,6 @@ public abstract class AbState { // this is basically a decorator pattern
 
     /**
      * Runs a state machine using currentState; handles how telemetry is passed upwards
-     *
-     * @author Will (wrtc9)
      */
     protected void runMachine() {
         currentState.run();

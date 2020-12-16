@@ -92,7 +92,7 @@ public class MovementHandler { // make this static
      * wheels) and multiplied by the <a href="https://en.wikipedia.org/wiki/Sigmoid_function">sigmoid</a>
      * of the total (sigmoid is translated to range from -1 to 1).
      *
-     * @author Will (wrtc9)
+     *
      * @param lin linear component of the robot speed
      * @param lat lateral component of the robot speed
      * @param rot rotational component of the robot speed
@@ -173,7 +173,7 @@ public class MovementHandler { // make this static
      * Practically, this is used to rotate a target point around the robot so the robot is virtually
      * facing towards positive y. This, fixes an issue with x and y error.
      *
-     * @author Will (wrtc9)
+     *
      * @param x x distance between robot and target
      * @param y y distance between robot and target
      * @param r rotation of the robot
@@ -204,7 +204,7 @@ public class MovementHandler { // make this static
      * GetSensorDetections finds which sensors detect an object within a distance of the variable
      * precision.
      *
-     * @author Will (wrtc9)
+     *
      * @param precision how close an object must be before it is avoided
      */
     public EnumSet<SensorDetection> getSensorDetections(float precision) { // set

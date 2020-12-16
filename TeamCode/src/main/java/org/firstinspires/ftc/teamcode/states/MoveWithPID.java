@@ -96,7 +96,6 @@ public class MoveWithPID extends AbState { // this state will forever move close
      * getTarget is designed to be overridden by a sub-class to dynamically change the target
      * position.
      * @return Target position
-     * @author Will (wrtc9)
      */
     protected Target getTarget() { // instead of having a MoveToAvoid class which extends this class, we could make a set target method which sets the target and resets the controllers and have the target be controlled from the outside
         return target;

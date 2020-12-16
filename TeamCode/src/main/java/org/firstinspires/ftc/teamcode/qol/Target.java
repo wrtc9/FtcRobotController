@@ -59,8 +59,6 @@ public class Target { // just adds a bit of length safety and readability, also 
 
     /**
      * Multiplies the x and y components of the Target by 25.4
-     *
-     * @author Will (wrtc9)
      */
     public void toMM () {
         float mmPerIn = 25.4f;
@@ -71,8 +69,6 @@ public class Target { // just adds a bit of length safety and readability, also 
     /**
      * Typically used when changing sides
      * @return A target which is mirrored across the y-axis of the playing field.
-     *
-     * @author Will (wrtc9)
      */
     public Target getMirroredTarget() { // idk about this, this should only be done on rising edge; or else it could return the formatted target w/o changing target
         float formattedX = x;

@@ -23,7 +23,6 @@ public class PID { // brug ftc has pidfs built in but theyre useless
      * @param kP proportion coefficient
      * @param kI integral coefficient
      * @param kD derivative coefficient
-     * @author Will (wrtc9)
      */
     public PID(float kP, float kI, float kD) {
         this.kP = kP;
