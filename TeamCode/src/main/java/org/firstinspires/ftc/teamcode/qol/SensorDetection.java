@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.qol;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * SensorDetection is an enum for sensor detections and sensors in general. Used typically in an
  * EnumSet.
@@ -24,15 +22,14 @@ public enum SensorDetection {
         this.name = name;
     }
 
-    public Target getDetour(Target position) {
+    public Location getDetour(Location position) {
         float distance = 8f;
         position.setX(position.getX() + x * distance);
         position.setY(position.getY() + y * distance);
         return position;
     }
 
-    @NotNull
-    public String toString() {
+    public String toString_() {
         return name;
     }
 }

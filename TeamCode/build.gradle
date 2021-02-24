@@ -20,5 +20,4 @@ repositories {
 
 dependencies {
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
-    implementation 'org.jetbrains:annotations:15.0'
 }

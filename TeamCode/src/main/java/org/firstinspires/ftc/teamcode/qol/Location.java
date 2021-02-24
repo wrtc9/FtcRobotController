@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.qol;
 
-import java.util.function.Consumer;
-
 /**
  * The Target Class adds a standardized object for positions on the playing field. As opposed to a
  * float[], Target provides length safety, better readability, and useful functions.
  *
  * @author Will (wrtc9)
  */
-public class Target { // just adds a bit of length safety and readability, also can do cool stuff like toMM
+public class Location { // just adds a bit of length safety and readability, also can do cool stuff like toMM
     // TODO: Better implement this type
     private float x;
     private float y;
@@ -16,7 +14,7 @@ public class Target { // just adds a bit of length safety and readability, also 
 
     private float[] iterable;
 
-    public Target (float x, float y, float r) {
+    public Location(float x, float y, float r) {
         r %= 360; // making sure r is in bounds
 
         this.x = x;
@@ -70,17 +68,17 @@ public class Target { // just adds a bit of length safety and readability, also 
      * Typically used when changing sides
      * @return A target which is mirrored across the y-axis of the playing field.
      */
-    public Target getMirroredTarget() { // idk about this, this should only be done on rising edge; or else it could return the formatted target w/o changing target
+    public Location getMirroredTarget() { // idk about this, this should only be done on rising edge; or else it could return the formatted target w/o changing target
         float formattedX = x;
         float formattedR = r;
 
         formattedX *= -1;
         formattedR = (180 - formattedR) % 360;
 
-        return new Target(formattedX, y, formattedR);
+        return new Location(formattedX, y, formattedR);
     }
 
-    public Target clone() {
-        return new Target(x, y, r);
+    public Location clone() {
+        return new Location(x, y, r);
     }
 }

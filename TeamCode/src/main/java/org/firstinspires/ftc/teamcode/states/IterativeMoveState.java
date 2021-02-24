@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.states;
 
+import org.firstinspires.ftc.teamcode.qol.Location;
 import org.firstinspires.ftc.teamcode.qol.SensorDetection;
-import org.firstinspires.ftc.teamcode.qol.Target;
 import org.firstinspires.ftc.teamcode.qol.TelemetryInfo;
 
 import java.util.EnumSet;
@@ -14,15 +14,15 @@ import java.util.EnumSet;
  * @author Will (wrtc9)
  */
 public class IterativeMoveState extends MoveWithPID { // need to change this to be in line with MoveAndAvoid
-    private final Target translation;
-    private final Target target;
+    private final Location translation;
+    private final Location target;
 
     private int repetitions = 0;
     private final int maxRepetitions;
 
     private TelemetryInfo repetitionsInfo = new TelemetryInfo("REPETITIONS", "0");
 
-    protected IterativeMoveState(String name, Target start, Target translation, int maxRepetitions, AbState nextState) {
+    protected IterativeMoveState(String name, Location start, Location translation, int maxRepetitions, AbState nextState) {
         super(name, nextState);
 
         this.target = start;
@@ -60,7 +60,7 @@ public class IterativeMoveState extends MoveWithPID { // need to change this to 
 
     }
 
-    protected Target getTarget() {
+    protected Location getTarget() {
         return target;
     }
 

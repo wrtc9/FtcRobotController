@@ -111,7 +111,7 @@ public class VuforiaHandler { // 0, 0, 0 is the middle of the field looking at b
                 .translation(halfField, -quadField, targetHeight)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90)));
 
-        // camera location stuff, not super complicated
+        // camera location stuff, nonot super complicated
         if (CAMERA_DIRECTION == BACK) {
             phoneYRotate = -90;
         } else {

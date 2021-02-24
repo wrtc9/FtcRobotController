@@ -31,11 +31,6 @@ public abstract class FSMAutonomous extends OpMode {
 
     private DefaultAuto defaultAuto;
 
-    private DcMotor leftFront;
-    private DcMotor rightFront;
-    private DcMotor leftRear;
-    private DcMotor rightRear;
-
     /* public Float robotX;
     public Float robotY;
     public Float robotR; */
@@ -48,7 +43,7 @@ public abstract class FSMAutonomous extends OpMode {
     public void init() {
         // initialize motors
         vuforiaHandler = new VuforiaHandler();
-        movementHandler = new MovementHandler();
+        movementHandler = new MovementHandler(hardwareMap);
 
         /* ArrayList<Float> robotXYR = vuforiaHandler.getRobotXYR();
         robotX = robotXYR.get(0); // maybe don't cast to double

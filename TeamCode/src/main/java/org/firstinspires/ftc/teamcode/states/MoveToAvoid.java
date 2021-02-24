@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.states;
 
+import org.firstinspires.ftc.teamcode.qol.Location;
 import org.firstinspires.ftc.teamcode.qol.SensorDetection;
-import org.firstinspires.ftc.teamcode.qol.Target;
 import org.firstinspires.ftc.teamcode.qol.TelemetryInfo;
 
 import java.util.EnumSet;
@@ -14,11 +14,8 @@ import java.util.EnumSet;
  */
 public class MoveToAvoid extends MoveWithPID { // edit this so that the robot doesn't go back and forth; also make this work better with the new Target type
 
-    private final Target target; // this is going to be where MoveWithPID wants to go
-    private Target detour; // where MoveToAvoid is headed
-
-    @Deprecated
-    private float[][] visitedLocations; // for checking if we're looping
+    private final Location target; // this is going to be where MoveWithPID wants to go
+    private Location detour; // where MoveToAvoid is headed
 
     private EnumSet<SensorDetection> previousDetections;
     private SensorDetection bestDirection;
@@ -26,7 +23,7 @@ public class MoveToAvoid extends MoveWithPID { // edit this so that the robot do
     private final TelemetryInfo avoidanceInfo = new TelemetryInfo("AVOIDING:"),
                                 detectionInfo = new TelemetryInfo("DETECTIONS:");
 
-    protected MoveToAvoid(String name, AbState nextState, Target target) {
+    protected MoveToAvoid(String name, AbState nextState, Location target) {
         super(name, nextState);
         this.target = target;
     } // add target to the constructor
@@ -42,9 +39,9 @@ public class MoveToAvoid extends MoveWithPID { // edit this so that the robot do
     }
 
     @Override
-    protected Target getTarget() { // if there is a change in detections, change best direction (we'll have to avoid going back and forth); if there are detections, change target
+    protected Location getTarget() { // if there is a change in detections, change best direction (we'll have to avoid going back and forth); if there are detections, change target
         EnumSet<SensorDetection> detections = movementHandler.getSensorDetections(sensorPrecision);
-        Target currentPosition = new Target(robotX, robotY, robotR);
+        Location currentPosition = new Location(robotX, robotY, robotR);
 
         EnumSet<SensorDetection> newDetections = detections.clone(); // find rising edge new detections
         newDetections.removeAll(previousDetections);
@@ -56,7 +53,7 @@ public class MoveToAvoid extends MoveWithPID { // edit this so that the robot do
             double leastDistance = 0;
 
             for (SensorDetection direction : openSides) { // find which side is best to detour to
-                Target possibleDetour = direction.getDetour(currentPosition);
+                Location possibleDetour = direction.getDetour(currentPosition);
                 double distance = movementHandler.distanceTo(target.getX() - possibleDetour.getX(), target.getY() - possibleDetour.getY()); // finds closest possible detour to the ultimate target
 
                 if (distance < leastDistance || leastDirection == null) { // this is a bit worrisome
@@ -72,8 +69,13 @@ public class MoveToAvoid extends MoveWithPID { // edit this so that the robot do
             detour = bestDirection.getDetour(currentPosition);
         }
 
-        avoidanceInfo.setContent(bestDirection.toString());
-        detectionInfo.setContent(detections.toString()); // hopefully this will work
+        avoidanceInfo.setContent(bestDirection.toString_());
+        String content = ""; // do this to format detections
+        for (SensorDetection i : detections){
+            content += i.toString_() + ", ";
+        }
+        content = content.substring(0, content.length()-2); // chops off last ", "
+        detectionInfo.setContent(content); // hopefully this will work
 
         previousDetections = detections;
         return detour;

@@ -4,7 +4,7 @@ import org.firstinspires.ftc.teamcode.qol.Locations;
 import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
 import org.firstinspires.ftc.teamcode.qol.Side;
 import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
-import org.firstinspires.ftc.teamcode.qol.Target;
+import org.firstinspires.ftc.teamcode.qol.Location;
 
 /**
  * MoveAndShoot uses runMachine to move to each powershot and shoot. Uses
@@ -21,8 +21,8 @@ public class MoveAndShoot extends AbState { // this makes me want to kms
         super(name);
         this.nextState = nextState;
 
-        Target target = Locations.POWER_SHOT_LINE.getLocation();
-        Target translation = new Target(7.5f, 0f, 0f);
+        Location target = Locations.POWER_SHOT_LINE.getLocation();
+        Location translation = new Location(7.5f, 0f, 0f);
 
         if (side == Side.RED) {
             target = target.getMirroredTarget();

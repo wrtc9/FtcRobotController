@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.depricated.CalibrationInfo;
+import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,29 +13,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 //Copy pasted for now because I don't know what I need to import
 
-@Teleop(name = "DKTeleOpV1", group = "TeleOp")
+@TeleOp (name = "DKTeleOpV1", group = "TeleOp")
 public class DLKTeleOpV1 extends OpMode {
 	public MovementHandler movementHandler;
-	
-	private DcMotor leftFront;
-    private DcMotor rightFront;
-    private DcMotor leftRear;
-    private DcMotor rightRear;
 
 	private double rotation;
 	private double xCheck;
 	private double yCheck;
 	private double rt;
+	private double lt;
 	
 	@Override
 	public void init() {
 	//TODO Go back and relearn objects and inheritence
-	movementHandler = new MovementHandler();
-		
-		leftFront = movementHandler.getDcMotor("leftFront");
-        rightFront = movementHandler.getDcMotor("rightFront");
-        leftRear = movementHandler.getDcMotor("leftRear");
-        rightRear = movementHandler.getDcMotor("rightRear");
+		movementHandler = new MovementHandler(hardwareMap);
 		
 		//probably not absolutely needed to reset variables, but it doesn't hurt
 		rotation = 0;
@@ -42,7 +35,7 @@ public class DLKTeleOpV1 extends OpMode {
 		xCheck = 0;
 		yCheck = 0;
 	}
-	
+
 	@Override
 	public void loop() {
 		xCheck = deadzone(gamepad1.left_stick_x, .1);
@@ -54,7 +47,7 @@ public class DLKTeleOpV1 extends OpMode {
 	}
 
 	//Checks to see if the value is above a certain threshold so that we can have a deadzone on the joystick and triggers
-	private double deadzone(variable, deadzone){
+	private double deadzone(double variable, double deadzone){
 		if(Math.abs(variable) < deadzone) {
 			return 0;
 		} else {

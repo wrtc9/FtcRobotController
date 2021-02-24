@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.states;
 import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
 import org.firstinspires.ftc.teamcode.qol.Side;
 import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
-import org.firstinspires.ftc.teamcode.qol.Target;
+import org.firstinspires.ftc.teamcode.qol.Location;
 import org.firstinspires.ftc.teamcode.qol.WobbleSetting;
 
 /**
@@ -38,7 +38,7 @@ public class FindZone extends AbState { // this might be better if we use init w
     @Override
     public void run() {
         WobbleSetting wobbleSetting = movementHandler.findWobble();
-        Target correctTarget = wobbleSetting.getTarget(); // should this return a formatted sign for side
+        Location correctTarget = wobbleSetting.getTarget(); // should this return a formatted sign for side
 
         if (side == Side.RED) {
             correctTarget = correctTarget.getMirroredTarget();

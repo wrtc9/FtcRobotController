@@ -4,7 +4,7 @@ import org.firstinspires.ftc.teamcode.qol.Locations;
 import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
 import org.firstinspires.ftc.teamcode.qol.Side;
 import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
-import org.firstinspires.ftc.teamcode.qol.Target;
+import org.firstinspires.ftc.teamcode.qol.Location;
 
 /**
  * MoveToWobbleZone checks the central ring stack and moves to where it is destined. This class uses
@@ -23,7 +23,7 @@ public class MoveToWobbleZone extends AbState { // this can be done better
         super(name);
         this.nextState = nextState;
 
-        Target target = Locations.RING_STACK.getLocation();
+        Location target = Locations.RING_STACK.getLocation();
 
         if (side == Side.RED) {
             target = target.getMirroredTarget();
@@ -32,6 +32,8 @@ public class MoveToWobbleZone extends AbState { // this can be done better
         moveToStack = new MoveWithPID("MoveToStack", vuforiaHandler, movementHandler, target, findZone);
         findZone = new FindZone("FindZone", vuforiaHandler, movementHandler, side, end);
         end = new EndState("End");
+
+        currentState = moveToStack;
     }
 
     @Override

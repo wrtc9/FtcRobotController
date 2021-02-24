@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.states;
 import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
 import org.firstinspires.ftc.teamcode.qol.PID;
 import org.firstinspires.ftc.teamcode.qol.SensorDetection;
-import org.firstinspires.ftc.teamcode.qol.Target;
+import org.firstinspires.ftc.teamcode.qol.Location;
 import org.firstinspires.ftc.teamcode.qol.TelemetryInfo;
 import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
 
@@ -27,7 +27,7 @@ public class MoveWithPID extends AbState { // this state will forever move close
 
     private PID linPID, latPID, rotPID;
 
-    private Target target; // target must be in mm
+    private Location target; // target must be in mm
     protected float robotX, robotY, robotR;
 
     protected final float precision = 1f, sensorPrecision = 5f * 25.4f, robotWidth = 18f;
@@ -38,7 +38,7 @@ public class MoveWithPID extends AbState { // this state will forever move close
                                 rotInfo = new TelemetryInfo("ROTATIONAL_INPUT:"),
                                 targetInfo = new TelemetryInfo("TARGET:");
 
-    MoveWithPID(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, Target target, AbState nextState) {
+    public MoveWithPID(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, Location target, AbState nextState) {
         super(name);
 
         this.vuforiaHandler = vuforiaHandler;
@@ -86,18 +86,12 @@ public class MoveWithPID extends AbState { // this state will forever move close
 
     }
 
-    @Deprecated // deprecated for now, but this is an alternative to making children control target with get target, instead controlling from the top
-    public void setTarget(Target target) {
-        resetPIDS();
-        this.target = target;
-    }
-
     /**
      * getTarget is designed to be overridden by a sub-class to dynamically change the target
      * position.
      * @return Target position
      */
-    protected Target getTarget() { // instead of having a MoveToAvoid class which extends this class, we could make a set target method which sets the target and resets the controllers and have the target be controlled from the outside
+    protected Location getTarget() { // instead of having a MoveToAvoid class which extends this class, we could make a set target method which sets the target and resets the controllers and have the target be controlled from the outside
         return target;
     }
 
@@ -138,6 +132,6 @@ public class MoveWithPID extends AbState { // this state will forever move close
 
         targetInfo.setContent(String.format(Locale.ENGLISH,"X: %f, Y: %f, R: %f", target.getX(), target.getY(), target.getR()));
 
-        movementHandler.move(linIn, latIn, rotIn, 100); // need to define exit conditions
+        movementHandler.move(linIn, latIn, rotIn); // need to define exit conditions
     }
 }

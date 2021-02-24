@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public abstract class AbState { // this is basically a decorator pattern
     protected String name;
-    protected AbState currentState = this;
+    protected AbState currentState;
     protected AbState previousState;
 
     protected ArrayList<TelemetryInfo> telemetryObjs;

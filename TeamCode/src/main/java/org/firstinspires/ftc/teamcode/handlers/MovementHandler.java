@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.handlers;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Hardware;
 
 import org.firstinspires.ftc.teamcode.qol.SensorDetection;
 import org.firstinspires.ftc.teamcode.qol.WobbleSetting;
@@ -29,7 +32,7 @@ public class MovementHandler { // make this static
     private final DcMotor rightFront;
     private final DcMotor leftRear;
     private final DcMotor rightRear;
-    private HashMap<String, DcMotor> drivetrain;
+    private final HashMap<String, DcMotor> drivetrain;
 
     private final DcMotor flywheel;
     private final DcMotor ramp;
@@ -38,19 +41,23 @@ public class MovementHandler { // make this static
     private double latEncoderCoef;
     private double rotEncoderCoef;*/
 
-    public MovementHandler(){ // this will turn into a static block
-        leftFront = hardwareMap.dcMotor.get("leftFront");
-        rightFront = hardwareMap.dcMotor.get("rightFront");
-        leftRear = hardwareMap.dcMotor.get("leftRear");
-        rightRear = hardwareMap.dcMotor.get("rightRear");
+    public MovementHandler(HardwareMap devices){ // this will turn into a static block
+        leftFront = devices.dcMotor.get("leftFront");
+        rightFront = devices.dcMotor.get("rightFront");
+        leftRear = devices.dcMotor.get("leftRear");
+        rightRear = devices.dcMotor.get("rightRear");
 
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        drivetrain = new HashMap<String, DcMotor>();
         drivetrain.put("leftFront", leftFront);
         drivetrain.put("rightFront", rightFront);
         drivetrain.put("leftRear", leftRear);
         drivetrain.put("rightRear", rightRear);
 
-        flywheel = hardwareMap.dcMotor.get("flywheel");
-        ramp = hardwareMap.dcMotor.get("ramp");
+        flywheel = devices.dcMotor.get("flywheel");
+        ramp = devices.dcMotor.get("ramp");
 
         flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         ramp.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -80,10 +87,17 @@ public class MovementHandler { // make this static
             changeCurrentMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-        leftFront.setPower(lin - lat - rot); // total has to be on [-1,1]
-        rightFront.setPower(lin + lat + rot);
-        leftRear.setPower(lin + lat - rot);
-        rightRear.setPower(lin - lat + rot);
+        leftFront.setPower((lin - lat - rot)/3); // let's check this
+        rightFront.setPower((lin + lat + rot)/3);
+        leftRear.setPower((lin + lat - rot)/3);
+        rightRear.setPower((lin - lat + rot)/3);
+    }
+
+    public void test(){
+        leftFront.setPower(1);
+        rightFront.setPower(1);
+        leftRear.setPower(1);
+        rightRear.setPower(1);
     }
 
     /**
@@ -98,6 +112,8 @@ public class MovementHandler { // make this static
      * @param rot rotational component of the robot speed
      * @param weight weights sigmoid; input to sigmoid function is divided by weight
      */
+
+    @Deprecated
     public void move(double lin, double lat, double rot, int weight){ // weight is a bit like speed in a sense
 
         if (currentMode != DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
@@ -141,10 +157,10 @@ public class MovementHandler { // make this static
             changeCurrentMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
-        leftFront.setTargetPosition(lin - lat - rot);
-        rightFront.setTargetPosition(lin + lat + rot);
-        leftRear.setTargetPosition(lin + lat - rot);
-        rightRear.setTargetPosition(lin - lat + rot);
+        leftFront.setTargetPosition((lin - lat - rot)/3); // let's see if dividing by three works well!
+        rightFront.setTargetPosition((lin + lat + rot)/3);
+        leftRear.setTargetPosition((lin + lat - rot)/3);
+        rightRear.setTargetPosition((lin - lat + rot)/3);
     }
 
     public void shoot(double power, int time) {

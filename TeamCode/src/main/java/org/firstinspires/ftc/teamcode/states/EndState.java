@@ -5,7 +5,7 @@ package org.firstinspires.ftc.teamcode.states;
  * @author Will (wrtc9)
  */
 public class EndState extends AbState {
-    EndState(String name) {
+    public EndState(String name) {
         super(name);
     }
 
