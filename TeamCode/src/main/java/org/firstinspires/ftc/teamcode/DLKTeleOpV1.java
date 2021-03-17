@@ -10,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 //Copy pasted for now because I don't know what I need to import
 
@@ -23,6 +25,9 @@ public class DLKTeleOpV1 extends OpMode {
 	private double rt;
 	private double lt;
 	
+	private DcMotor ramp;
+	private DcMotor flywheel;
+	
 	@Override
 	public void init() {
 	//TODO Go back and relearn objects and inheritence
@@ -34,6 +39,9 @@ public class DLKTeleOpV1 extends OpMode {
 		lt = 0;
 		xCheck = 0;
 		yCheck = 0;
+		
+		ramp = hardwareMap.dcMotor.get("ramp");
+		flywheel = hardwareMap.dcMotor.get("flywheel");
 	}
 
 	@Override
@@ -43,7 +51,25 @@ public class DLKTeleOpV1 extends OpMode {
 		rt = deadzone(gamepad1.right_trigger, .1);
 		lt = deadzone(gamepad1.left_trigger, .1);
 		rotation = (rt - lt);
-		movementHandler.move(xCheck, yCheck, rotation);
+		double speed = Collections.max(Arrays.asList(Math.abs(yCheck), Math.abs(xCheck), Math.abs(rotation)));
+		movementHandler.move(yCheck, xCheck, rotation, speed*speed); // speed: Math.most(Math.abs(yCheck), Math.abs(xCheck), Math.abs(rotation))
+
+		telemetry.addData("X", String.valueOf(xCheck));
+		telemetry.addData("Y", String.valueOf(yCheck));
+		telemetry.addData("R", String.valueOf(rotation));
+
+		if (gamepad1.left_bumper) {
+			ramp.setPower(1);
+		}
+		else {
+			ramp.setPower(0);
+		}
+		if (gamepad1.right_bumper) {
+			flywheel.setPower(1);
+		}
+		else {
+			flywheel.setPower(0);
+		}
 	}
 
 	//Checks to see if the value is above a certain threshold so that we can have a deadzone on the joystick and triggers

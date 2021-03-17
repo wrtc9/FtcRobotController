@@ -41,7 +41,7 @@ public class MoveAndShoot extends AbState { // this makes me want to kms
 
     @Override
     public AbState next() {
-        if (currentState.getClass() == EndState.class){ // test this
+        if (currentState.getClass().equals(EndState.class)){ // test this
             return nextState; // that would bring it in line with the idea of terminating machines
         }
         else {

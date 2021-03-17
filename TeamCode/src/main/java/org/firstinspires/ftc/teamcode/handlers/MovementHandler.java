@@ -81,16 +81,17 @@ public class MovementHandler { // make this static
         }*/
     }
 
-    public void move(double lin, double lat, double rot){ // though both move methods would work, this one might be better for TeleOp
+    public void move(double lin, double lat, double rot, double speed){ // though both move methods would work, this one might be better for TeleOp
 
         if (currentMode != DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
             changeCurrentMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
+        double total = Math.abs(lin) + Math.abs(lat) + Math.abs(rot);
 
-        leftFront.setPower((lin - lat - rot)/3); // let's check this
-        rightFront.setPower((lin + lat + rot)/3);
-        leftRear.setPower((lin + lat - rot)/3);
-        rightRear.setPower((lin - lat + rot)/3);
+        leftFront.setPower((lin - lat - rot)/total*speed); // let's check this
+        rightFront.setPower((lin + lat + rot)/total*speed);
+        leftRear.setPower((lin + lat - rot)/total*speed);
+        rightRear.setPower((lin - lat + rot)/total*speed);
     }
 
     public void test(){
@@ -98,34 +99,6 @@ public class MovementHandler { // make this static
         rightFront.setPower(1);
         leftRear.setPower(1);
         rightRear.setPower(1);
-    }
-
-    /**
-     * Move sets the powers of all drive train motors using the parameters lin, lat, rot, and
-     * weight. Lin, lat, and rot are summed up (with positive or negative coefficients based on the
-     * wheels) and multiplied by the <a href="https://en.wikipedia.org/wiki/Sigmoid_function">sigmoid</a>
-     * of the total (sigmoid is translated to range from -1 to 1).
-     *
-     *
-     * @param lin linear component of the robot speed
-     * @param lat lateral component of the robot speed
-     * @param rot rotational component of the robot speed
-     * @param weight weights sigmoid; input to sigmoid function is divided by weight
-     */
-
-    @Deprecated
-    public void move(double lin, double lat, double rot, int weight){ // weight is a bit like speed in a sense
-
-        if (currentMode != DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
-            changeCurrentMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
-
-        double total = lin + lat + rot;
-
-        leftFront.setPower(sigmoid(total, weight) * ((lin - lat - rot) / total));
-        rightFront.setPower(sigmoid(total, weight) * ((lin + lat + rot) / total));
-        leftRear.setPower(sigmoid(total, weight) * ((lin + lat - rot) / total));
-        rightRear.setPower(sigmoid(total, weight) * ((lin - lat + rot) / total));
     }
 
     public double sigmoid(double x, int weight) {

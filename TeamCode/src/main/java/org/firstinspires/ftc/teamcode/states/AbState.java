@@ -45,7 +45,7 @@ public abstract class AbState { // this is basically a decorator pattern
         previousState = currentState;
         currentState = currentState.next();
 
-        if (previousState != currentState) {
+        if (!previousState.equals(currentState)) {
             currentState.init(previousState);
 
             telemetryObjs.removeAll(previousState.getTelemetry()); // this will allow intermediate states to add telemetry

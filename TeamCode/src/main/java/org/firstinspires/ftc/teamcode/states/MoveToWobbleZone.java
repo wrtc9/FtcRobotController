@@ -42,7 +42,7 @@ public class MoveToWobbleZone extends AbState { // this can be done better
 
     @Override
     public AbState next() {
-        if (currentState == end) { // "terminates" state machine
+        if (currentState.equals(end)) { // "terminates" state machine
             return nextState;
         }
         else {

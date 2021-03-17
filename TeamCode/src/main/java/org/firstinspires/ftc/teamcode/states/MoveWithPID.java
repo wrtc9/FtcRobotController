@@ -132,6 +132,6 @@ public class MoveWithPID extends AbState { // this state will forever move close
 
         targetInfo.setContent(String.format(Locale.ENGLISH,"X: %f, Y: %f, R: %f", target.getX(), target.getY(), target.getR()));
 
-        movementHandler.move(linIn, latIn, rotIn); // need to define exit conditions
+        movementHandler.move(linIn, latIn, rotIn, 1); // need to define exit conditions
     }
 }

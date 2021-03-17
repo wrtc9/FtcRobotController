@@ -61,7 +61,7 @@ public class DefaultAuto extends AbState {
 
     @Override
     public AbState next() {
-        if (currentState == end) {
+        if (currentState.equals(end)) {
             return new EndState("End"); // for telemetry
         }
         return this;
