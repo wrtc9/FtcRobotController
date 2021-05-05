@@ -100,10 +100,38 @@ public class MovementHandler { // make this static
         leftRear.setPower(1);
         rightRear.setPower(1);
     }
+    /*
+    /**
+     * Move sets the powers of all drive train motors using the parameters lin, lat, rot, and
+     * weight. Lin, lat, and rot are summed up (with positive or negative coefficients based on the
+     * wheels) and multiplied by the <a href="https://en.wikipedia.org/wiki/Sigmoid_function">sigmoid</a>
+     * of the total (sigmoid is translated to range from -1 to 1).
+     *
+     *
+     * @param lin linear component of the robot speed
+     * @param lat lateral component of the robot speed
+     * @param rot rotational component of the robot speed
+     * @param weight weights sigmoid; input to sigmoid function is divided by weight
+     */
+    /*
+    @Deprecated
+    public void move(double lin, double lat, double rot, int weight){ // weight is a bit like speed in a sense
+
+        if (currentMode != DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
+            changeCurrentMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
+        double total = lin + lat + rot;
+
+        leftFront.setPower(sigmoid(total, weight) * ((lin - lat - rot) / total));
+        rightFront.setPower(sigmoid(total, weight) * ((lin + lat + rot) / total));
+        leftRear.setPower(sigmoid(total, weight) * ((lin + lat - rot) / total));
+        rightRear.setPower(sigmoid(total, weight) * ((lin - lat + rot) / total));
+    }
 
     public double sigmoid(double x, int weight) {
         return 2 / (1 + Math.exp(-x / weight)) + 1;
-    } // make sure power can actually be negative
+    }*/ // make sure power can actually be negative
 
     public void changeModes(DcMotor.RunMode runMode){
         for (DcMotor dcMotor : drivetrain.values()) dcMotor.setMode(runMode);
@@ -172,8 +200,8 @@ public class MovementHandler { // make this static
         double d = distanceTo(x, y);
         double theta = thetaTo(x, y, d);
         theta += 90 - r; // where the actual rotating happens
-        double newX = Math.cos(theta) * d;
-        double newY = Math.sin(theta) * d;
+        double newX = Math.cos(Math.toRadians(theta)) * d;
+        double newY = Math.sin(Math.toRadians(theta)) * d;
         return new double[] {newX, newY};
     }
 
@@ -185,8 +213,8 @@ public class MovementHandler { // make this static
         return leftFront.isBusy() || rightFront.isBusy() || leftRear.isBusy() || rightRear.isBusy();
     }
 
-    public WobbleSetting findWobble() { // could use sensors or tfod with ratio between sides (make sure camera is straight on if doing this)
-        return null;
+    public double getWobbleSensor() { // could use sensors or tfod with ratio between sides (make sure camera is straight on if doing this)
+        return 0;
     }
 
     /**
@@ -197,6 +225,10 @@ public class MovementHandler { // make this static
      * @param precision how close an object must be before it is avoided
      */
     public EnumSet<SensorDetection> getSensorDetections(float precision) { // set
-        return null;
+        return EnumSet.noneOf(SensorDetection.class);
+    }
+
+    public int[] getTicks() {
+        return new int[] {leftFront.getCurrentPosition(), rightFront.getCurrentPosition(), leftRear.getCurrentPosition(), rightRear.getCurrentPosition()};
     }
 }

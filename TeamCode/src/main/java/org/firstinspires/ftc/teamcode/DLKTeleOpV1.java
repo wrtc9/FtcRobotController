@@ -52,7 +52,7 @@ public class DLKTeleOpV1 extends OpMode {
 		lt = deadzone(gamepad1.left_trigger, .1);
 		rotation = (rt - lt);
 		double speed = Collections.max(Arrays.asList(Math.abs(yCheck), Math.abs(xCheck), Math.abs(rotation)));
-		movementHandler.move(yCheck, xCheck, rotation, speed*speed); // speed: Math.most(Math.abs(yCheck), Math.abs(xCheck), Math.abs(rotation))
+		movementHandler.move(yCheck, xCheck, rotation, Math.pow(speed, 4)); // speed: Math.most(Math.abs(yCheck), Math.abs(xCheck), Math.abs(rotation))
 
 		telemetry.addData("X", String.valueOf(xCheck));
 		telemetry.addData("Y", String.valueOf(yCheck));

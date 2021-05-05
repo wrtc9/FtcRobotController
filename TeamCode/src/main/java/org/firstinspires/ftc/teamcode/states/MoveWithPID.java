@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.states;
 
 import org.firstinspires.ftc.teamcode.handlers.MovementHandler;
+import org.firstinspires.ftc.teamcode.handlers.PositionEstimator;
 import org.firstinspires.ftc.teamcode.qol.PID;
 import org.firstinspires.ftc.teamcode.qol.SensorDetection;
 import org.firstinspires.ftc.teamcode.qol.Location;
 import org.firstinspires.ftc.teamcode.qol.TelemetryInfo;
 import org.firstinspires.ftc.teamcode.handlers.VuforiaHandler;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Locale;
 
@@ -22,21 +25,28 @@ public class MoveWithPID extends AbState { // this state will forever move close
 
     protected VuforiaHandler vuforiaHandler;
     protected MovementHandler movementHandler;
+    protected PositionEstimator positionEstimator;
 
     protected AbState nextState;
 
-    private PID linPID, latPID, rotPID;
+    //private PID linPID, latPID, rotPID;
 
     private Location target; // target must be in mm
     protected float robotX, robotY, robotR;
+
+    private Location position = new Location(0, 0, 0);
 
     protected final float precision = 1f, sensorPrecision = 5f * 25.4f, robotWidth = 18f;
     private final double mmPerDeg = (robotWidth / Math.sqrt(2)) * 2 * Math.PI / 360; // r multiplied by 2pi (to get circumference) divided by 360 for degrees
 
     private final TelemetryInfo linInfo = new TelemetryInfo("LINEAR_INPUT:"),
-                                latInfo = new TelemetryInfo("LATERAL_INPUT:"),
-                                rotInfo = new TelemetryInfo("ROTATIONAL_INPUT:"),
-                                targetInfo = new TelemetryInfo("TARGET:");
+            latInfo = new TelemetryInfo("LATERAL_INPUT:"),
+            rotInfo = new TelemetryInfo("ROTATIONAL_INPUT:"),
+            targetInfo = new TelemetryInfo("TARGET:"),
+            estimatedPositionInfo = new TelemetryInfo("ESTIMATED_POSITION:"),
+            speedInfo = new TelemetryInfo("SPEED"),
+            errorInfo = new TelemetryInfo("ERROR");
+                                ;
 
     public MoveWithPID(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, Location target, AbState nextState) {
         super(name);
@@ -49,14 +59,19 @@ public class MoveWithPID extends AbState { // this state will forever move close
 
         this.nextState = nextState;
 
-        linPID = new PID();
+        /*linPID = new PID();
         latPID = new PID();
-        rotPID = new PID();
+        rotPID = new PID();*/
 
         telemetryObjs.add(linInfo);
         telemetryObjs.add(latInfo);
         telemetryObjs.add(rotInfo);
         telemetryObjs.add(targetInfo);
+        telemetryObjs.add(estimatedPositionInfo);
+        telemetryObjs.add(speedInfo);
+        telemetryObjs.add(errorInfo);
+
+        positionEstimator = new PositionEstimator(movementHandler);
     }
 
     protected MoveWithPID(String name, AbState nextState) { // used with MoveToAvoid
@@ -73,6 +88,7 @@ public class MoveWithPID extends AbState { // this state will forever move close
         EnumSet<SensorDetection> detections = movementHandler.getSensorDetections(sensorPrecision);
 
         if (distanceCheck(precision)){
+            movementHandler.move(1, 1, 1, 0);
             return nextState;
         }
 
@@ -96,42 +112,84 @@ public class MoveWithPID extends AbState { // this state will forever move close
     }
 
     public void resetPIDS() {
-        linPID.reset();
+        /*linPID.reset();
         latPID.reset();
-        rotPID.reset();
+        rotPID.reset();*/
     }
 
     protected boolean distanceCheck(float precision) { // this could probably be made a little better
-        return (target.getX() - robotX) < precision && (target.getY() - robotY) < precision && (target.getR() - robotR) < precision;
+        return (target.getX() - position.getX()) < precision && (target.getY() - position.getY()) < precision && (target.getR() - position.getR()) < 1;
+    }
+
+    private float clip(float compare, float max, float min) {
+        if (Math.abs(compare) > max) {
+            return Math.signum(compare) * max;
+        }
+        else if (Math.abs(compare) < min) {
+            return Math.signum(compare) * min;
+        }
+        else {
+            return compare;
+        }
+    }
+
+    private float clip(float num) {
+        return clip(num, 1, 0);
     }
 
     @Override
     public void run() { // TODO add avoidance
-        robotX = vuforiaHandler.getRobotX();
-        robotY = vuforiaHandler.getRobotY();
-        robotR = vuforiaHandler.getRobotR();
+        if (vuforiaHandler.isTargetVisible()) {
+            robotX = vuforiaHandler.getRobotX();
+            robotY = vuforiaHandler.getRobotY();
+            robotR = vuforiaHandler.getRobotR();
 
-        target = getTarget();
+            position.setX(robotX);
+            position.setY(robotY);
+            position.setR(robotR);
 
-        double[] transformedError = movementHandler.errorTransformer(target.getX() - robotX, target.getY() - robotY, robotR); // make this better suited to the Target type
+            positionEstimator.reset();
+        }
+        else {
+            position = positionEstimator.update(position);
+            estimatedPositionInfo.setContent(String.format(Locale.ENGLISH, "{X, Y, R} = %.1f, %.1f, %.1f",
+                    position.getX()/25.4, position.getY()/25.4, position.getR()/25.4));
+        }
+
+        target = getTarget(); //dumb
+
+        double[] transformedError = movementHandler.errorTransformer(target.getX() - position.getX(), target.getY() - position.getY(), position.getR()); // make this better suited to the Target type
         float xError = (float) transformedError[0];
         float yError = (float) transformedError[1];
-        float rError = (target.getY() - robotR) * (float) mmPerDeg; // multiplied by mmPerDeg for proper weighting
+        float rError = target.getR() - position.getR(); // multiplied by mmPerDeg for proper weighting
 
-        latPID.update(xError);
+        errorInfo.setContent(String.format(Locale.ENGLISH, "X: %f, Y: %f, R: %f", xError, yError, rError));
+
+        /*latPID.update(xError);
         linPID.update(yError);
         rotPID.update(rError);
 
-        float linIn = linPID.getInput();
-        float latIn = latPID.getInput();
-        float rotIn = rotPID.getInput();
+        float linIn = linPID.getInput()/(25.4f*144f);
+        float latIn = latPID.getInput()/(25.4f*144f);
+        float rotIn = rotPID.getInput()/360;*/
+
+        float latIn = xError / (25.4f * 144f);
+        float linIn = yError / (25.4f * 144f);
+        float rotIn = rError / 360;
+        clip(linIn); // just in case
+        clip(latIn);
+        clip(rotIn);
 
         linInfo.setContent(String.valueOf(linIn));
         latInfo.setContent(String.valueOf(latIn));
         rotInfo.setContent(String.valueOf(rotIn));
 
-        targetInfo.setContent(String.format(Locale.ENGLISH,"X: %f, Y: %f, R: %f", target.getX(), target.getY(), target.getR()));
+        float speed = clip(Collections.max(Arrays.asList(linIn, latIn, rotIn)), 0.7f, 0.3f);
 
-        movementHandler.move(linIn, latIn, rotIn, 1); // need to define exit conditions
+        speedInfo.setContent(String.valueOf(speed));
+
+        targetInfo.setContent(String.format(Locale.ENGLISH, "X: %f, Y: %f, R: %f", target.getX()/25.4, target.getY()/25.4, target.getR()/25.4));
+
+        movementHandler.move(linIn, latIn, rotIn, speed); // need to define exit conditions
     }
 }

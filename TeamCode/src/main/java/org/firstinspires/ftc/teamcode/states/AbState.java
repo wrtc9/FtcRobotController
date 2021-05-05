@@ -14,7 +14,7 @@ public abstract class AbState { // this is basically a decorator pattern
     protected AbState currentState;
     protected AbState previousState;
 
-    protected ArrayList<TelemetryInfo> telemetryObjs;
+    protected ArrayList<TelemetryInfo> telemetryObjs = new ArrayList<TelemetryInfo>();
 
     public AbState(String name){
         this.name = name;

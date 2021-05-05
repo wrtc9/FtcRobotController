@@ -10,7 +10,7 @@ public class PID { // brug ftc has pidfs built in but theyre useless
     // a simple p controller which is just Math.signum(error) might be faster but less accurate, do that if tuning isn't working out well
     private float pastError = 0;
 
-    private float kP = 1f, kI = 0.1f, kD = 0.01f; // add default values for overloaded constructor
+    private float kP = 1f, kI = 0f, kD = 0f; // add default values for overloaded constructor
 
     private float P, I = 0, D; // actual values
 

@@ -42,7 +42,7 @@ public abstract class FSMAutonomous extends OpMode {
     @Override
     public void init() {
         // initialize motors
-        vuforiaHandler = new VuforiaHandler();
+        vuforiaHandler = new VuforiaHandler(hardwareMap);
         movementHandler = new MovementHandler(hardwareMap);
 
         /* ArrayList<Float> robotXYR = vuforiaHandler.getRobotXYR();

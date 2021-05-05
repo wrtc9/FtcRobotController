@@ -22,9 +22,9 @@ public class Test  extends OpMode {
 
     @Override
     public void init() {
-        vuforiaHandler = new VuforiaHandler();
+        vuforiaHandler = new VuforiaHandler(hardwareMap);
         movementHandler = new MovementHandler(hardwareMap);
-        moveState = new MoveWithPID("test", vuforiaHandler, movementHandler, new Location(0, 0, 0), new EndState("end"));
+        moveState = new MoveWithPID("test", vuforiaHandler, movementHandler, new Location(0, 10, 0), new EndState("end"));
         currentState = moveState;
     }
 
@@ -38,6 +38,10 @@ public class Test  extends OpMode {
             telemetry.addData(piece.getCaption(), piece.getContent());
         }
 
-        currentState = currentState.next();
+        //currentState = currentState.next();
+        ArrayList<TelemetryInfo> vuforiaTelemtries = vuforiaHandler.getTelemetryObjs();
+        for (TelemetryInfo vuforiaTelemetry : vuforiaTelemtries) {
+            telemetry.addData(vuforiaTelemetry.getCaption(), vuforiaTelemetry.getContent());
+        }
     }
 }

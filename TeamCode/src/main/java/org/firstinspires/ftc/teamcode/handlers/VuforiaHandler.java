@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.handlers;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -8,12 +10,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.qol.TelemetryInfo;
 
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
@@ -56,6 +60,8 @@ public class VuforiaHandler { // 0, 0, 0 is the middle of the field looking at b
 
     private List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
+    private ArrayList<TelemetryInfo> telemetryObjs = new ArrayList<TelemetryInfo>();
+
     public float getRobotX(){
         return robotX;
     }
@@ -66,9 +72,9 @@ public class VuforiaHandler { // 0, 0, 0 is the middle of the field looking at b
         return robotR;
     }
 
-    public VuforiaHandler() {
+    public VuforiaHandler(HardwareMap devices) {
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()); // vuforia init stuff
+        int cameraMonitorViewId = devices.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", devices.appContext.getPackageName()); // vuforia init stuff
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
@@ -111,7 +117,7 @@ public class VuforiaHandler { // 0, 0, 0 is the middle of the field looking at b
                 .translation(halfField, -quadField, targetHeight)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90)));
 
-        // camera location stuff, nonot super complicated
+        // camera location stuff, not super complicated
         if (CAMERA_DIRECTION == BACK) {
             phoneYRotate = -90;
         } else {
@@ -130,14 +136,16 @@ public class VuforiaHandler { // 0, 0, 0 is the middle of the field looking at b
             // do this to all trackables
             ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, parameters.cameraDirection);
         }
+
+        targetsUltimateGoal.activate();
     }
 
     public void update() {
+        telemetryObjs = new ArrayList<TelemetryInfo>();
         targetVisible = false; // are any targets visible?
-
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                telemetry.addData("Visible Target", trackable.getName()); // tell telemetry there's a target visible
+                telemetryObjs.add(new TelemetryInfo("Visible Target", trackable.getName()));
                 targetVisible = true; // there's a target visible
 
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation(); // find the updated location
@@ -151,22 +159,28 @@ public class VuforiaHandler { // 0, 0, 0 is the middle of the field looking at b
         if (targetVisible) { // if there's a target visible, do telemetry stuff
 
             VectorF translation = lastLocation.getTranslation();
-            telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
-                    translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
+            telemetryObjs.add(new TelemetryInfo("Pos (in)", String.format(Locale.ENGLISH, "{X, Y, Z} = %.1f, %.1f, %.1f",
+                    translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch)));
 
 
             Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-            telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+            telemetryObjs.add(new TelemetryInfo("Rot (deg)",
+                    String.format(Locale.ENGLISH, "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle)));
+
+            // actual autonomous stuff here
+            float[] coordinates = lastLocation.getTranslation().getData(); // the fact that we don't know the location always could pose a problem
+            robotX = coordinates[0]; // bruh moment this won't work since immutable shit
+            robotY = coordinates[1]; // maybe fix with having an object to store update versions of these or have update return something or just run getters everytime but thats a pain in the ass
+            robotR = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES).thirdAngle;
         }
         else { // else, tell telemetry no targets are visible
-            telemetry.addData("Visible Target", "none");
+            telemetryObjs.add(new TelemetryInfo("Visible Target", "none"));
         }
-        telemetry.update(); // update telemetry (send the changes)
-
-        // actual autonomous stuff here
-        float[] coordinates = lastLocation.getTranslation().getData();
-        robotX = coordinates[0]; // bruh moment this won't work since immutable shit
-        robotY = coordinates[1]; // maybe fix with having an object to store update versions of these or have update return something or just run getters everytime but thats a pain in the ass
-        robotR = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES).thirdAngle;
     }
+
+    public ArrayList<TelemetryInfo> getTelemetryObjs() {
+        return telemetryObjs;
+    }
+
+    public boolean isTargetVisible() {return targetVisible;}
 }
