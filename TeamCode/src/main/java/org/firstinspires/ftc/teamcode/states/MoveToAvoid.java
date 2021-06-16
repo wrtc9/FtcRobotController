@@ -29,7 +29,7 @@ public class MoveToAvoid extends MoveWithPID { // edit this so that the robot do
     } // add target to the constructor
 
     public AbState next() {
-        if (distanceCheck(precision)){ // not sure if distance check will work properly
+        if (distanceCheck(precision, rotationPrecision)){ // not sure if distance check will work properly
             return nextState;
         }
 

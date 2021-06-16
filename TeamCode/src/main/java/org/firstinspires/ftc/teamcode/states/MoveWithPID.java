@@ -36,7 +36,7 @@ public class MoveWithPID extends AbState { // this state will forever move close
 
     private Location position = new Location(0, 0, 0);
 
-    protected final float precision = 1f, sensorPrecision = 5f * 25.4f, robotWidth = 18f;
+    protected final float precision = 25.4f, sensorPrecision = 5f * 25.4f, rotationPrecision = 5f, robotWidth = 18f;
     private final double mmPerDeg = (robotWidth / Math.sqrt(2)) * 2 * Math.PI / 360; // r multiplied by 2pi (to get circumference) divided by 360 for degrees
 
     private final TelemetryInfo linInfo = new TelemetryInfo("LINEAR_INPUT:"),
@@ -45,8 +45,9 @@ public class MoveWithPID extends AbState { // this state will forever move close
             targetInfo = new TelemetryInfo("TARGET:"),
             estimatedPositionInfo = new TelemetryInfo("ESTIMATED_POSITION:"),
             speedInfo = new TelemetryInfo("SPEED"),
-            errorInfo = new TelemetryInfo("ERROR");
-                                ;
+            errorInfo = new TelemetryInfo("ERROR"),
+            unalteredErrorInfo = new TelemetryInfo("UNALTERED_ERROR");
+
 
     public MoveWithPID(String name, VuforiaHandler vuforiaHandler, MovementHandler movementHandler, Location target, AbState nextState) {
         super(name);
@@ -70,6 +71,7 @@ public class MoveWithPID extends AbState { // this state will forever move close
         telemetryObjs.add(estimatedPositionInfo);
         telemetryObjs.add(speedInfo);
         telemetryObjs.add(errorInfo);
+        telemetryObjs.add(unalteredErrorInfo);
 
         positionEstimator = new PositionEstimator(movementHandler);
     }
@@ -87,12 +89,12 @@ public class MoveWithPID extends AbState { // this state will forever move close
     public AbState next() { // this might mess up
         EnumSet<SensorDetection> detections = movementHandler.getSensorDetections(sensorPrecision);
 
-        if (distanceCheck(precision)){
+        if (distanceCheck(precision, rotationPrecision)){
             movementHandler.move(1, 1, 1, 0);
             return nextState;
         }
 
-        else if (!detections.isEmpty() && !distanceCheck(precision + sensorPrecision)) { // we should try to phase the distance check out, only doing this so that we can get to the stack of rings
+        else if (!detections.isEmpty() && !distanceCheck(precision + sensorPrecision, rotationPrecision)) { // we should try to phase the distance check out, only doing this so that we can get to the stack of rings
             return new MoveToAvoid("Detour" + name, this, target);
         }
 
@@ -117,8 +119,8 @@ public class MoveWithPID extends AbState { // this state will forever move close
         rotPID.reset();*/
     }
 
-    protected boolean distanceCheck(float precision) { // this could probably be made a little better
-        return (target.getX() - position.getX()) < precision && (target.getY() - position.getY()) < precision && (target.getR() - position.getR()) < 1;
+    protected boolean distanceCheck(float precision, float rotationPrecision) { // this could probably be made a little better
+        return (target.getX() - position.getX()) < precision && (target.getY() - position.getY()) < precision && (target.getR() - position.getR()) < rotationPrecision;
     }
 
     private float clip(float compare, float max, float min) {
@@ -153,17 +155,22 @@ public class MoveWithPID extends AbState { // this state will forever move close
         else {
             position = positionEstimator.update(position);
             estimatedPositionInfo.setContent(String.format(Locale.ENGLISH, "{X, Y, R} = %.1f, %.1f, %.1f",
-                    position.getX()/25.4, position.getY()/25.4, position.getR()/25.4));
+                    position.getX()/25.4, position.getY()/25.4, position.getR()));
         }
 
         target = getTarget(); //dumb
+
+        unalteredErrorInfo.setContent(String.format(Locale.ENGLISH, "X: %f, Y: %f, R: %f", target.getX() - position.getX(), target.getY() - position.getY(), position.getR()));
 
         double[] transformedError = movementHandler.errorTransformer(target.getX() - position.getX(), target.getY() - position.getY(), position.getR()); // make this better suited to the Target type
         float xError = (float) transformedError[0];
         float yError = (float) transformedError[1];
         float rError = target.getR() - position.getR(); // multiplied by mmPerDeg for proper weighting
+        /*xError = (Math.abs(xError) >= precision) ? xError : 0f;
+        yError = (Math.abs(yError) >= precision) ? yError : 0f;
+        rError = (Math.abs(rError) >= rotationPrecision) ? rError : 0f;*/
 
-        errorInfo.setContent(String.format(Locale.ENGLISH, "X: %f, Y: %f, R: %f", xError, yError, rError));
+        errorInfo.setContent(String.format(Locale.ENGLISH, "X: %f, Y: %f, R: %f", xError/25.4, yError/25.4, rError));
 
         /*latPID.update(xError);
         linPID.update(yError);
@@ -173,7 +180,7 @@ public class MoveWithPID extends AbState { // this state will forever move close
         float latIn = latPID.getInput()/(25.4f*144f);
         float rotIn = rotPID.getInput()/360;*/
 
-        float latIn = xError / (25.4f * 144f);
+        float latIn = xError / (25.4f * 144f); // TODO change to dividing by speeds
         float linIn = yError / (25.4f * 144f);
         float rotIn = rError / 360;
         clip(linIn); // just in case
@@ -188,7 +195,7 @@ public class MoveWithPID extends AbState { // this state will forever move close
 
         speedInfo.setContent(String.valueOf(speed));
 
-        targetInfo.setContent(String.format(Locale.ENGLISH, "X: %f, Y: %f, R: %f", target.getX()/25.4, target.getY()/25.4, target.getR()/25.4));
+        targetInfo.setContent(String.format(Locale.ENGLISH, "X: %f, Y: %f, R: %f", target.getX()/25.4, target.getY()/25.4, target.getR()));
 
         movementHandler.move(linIn, latIn, rotIn, speed); // need to define exit conditions
     }

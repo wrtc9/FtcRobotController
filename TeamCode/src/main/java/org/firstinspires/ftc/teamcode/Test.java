@@ -43,5 +43,7 @@ public class Test  extends OpMode {
         for (TelemetryInfo vuforiaTelemetry : vuforiaTelemtries) {
             telemetry.addData(vuforiaTelemetry.getCaption(), vuforiaTelemetry.getContent());
         }
+
+        telemetry.update();
     }
 }

@@ -31,6 +31,16 @@ public class PositionEstimator {
         telemetryInfos.add(rotTele);
     }
 
+    private double[] deltaTransformer(double x, double y, double r) {
+        // re-work this to return something like a Target
+        double d = movementHandler.distanceTo(x, y);
+        double theta = movementHandler.thetaTo(x, y, d); // d = 0
+        theta -= 90 - r; // where the actual rotating happens. i swear to god this one fucking line
+        double newX = Math.cos(Math.toRadians(theta)) * d;
+        double newY = Math.sin(Math.toRadians(theta)) * d;
+        return new double[] {newX, newY};
+    }
+
     public Location update(Location position) {
         if (previousTicks == null) {
             previousTicks = movementHandler.getTicks();
@@ -50,6 +60,11 @@ public class PositionEstimator {
             double linMM = linTicks * MM_PER_TICK;
             double latMM = latTicks * MM_PER_TICK;
             double rotDegrees = rotTicks * DEGREE_PER_TICK;
+
+            double[] updatedDelta = deltaTransformer(latMM, linMM, rotDegrees + position.getR());
+
+            latMM = updatedDelta[0];
+            linMM = updatedDelta[1];
 
             previousTicks = currentTicks;
 

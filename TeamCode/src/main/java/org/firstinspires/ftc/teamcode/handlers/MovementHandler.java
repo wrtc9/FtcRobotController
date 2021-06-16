@@ -88,10 +88,18 @@ public class MovementHandler { // make this static
         }
         double total = Math.abs(lin) + Math.abs(lat) + Math.abs(rot);
 
-        leftFront.setPower((lin - lat - rot)/total*speed); // let's check this
-        rightFront.setPower((lin + lat + rot)/total*speed);
-        leftRear.setPower((lin + lat - rot)/total*speed);
-        rightRear.setPower((lin - lat + rot)/total*speed);
+        if (total != 0) { // avoids divide by zero error
+            leftFront.setPower((lin - lat - rot) / total * speed); // let's check this
+            rightFront.setPower((lin + lat + rot) / total * speed);
+            leftRear.setPower((lin + lat - rot) / total * speed);
+            rightRear.setPower((lin - lat + rot) / total * speed);
+        }
+        else {
+            leftFront.setPower(0);
+            rightFront.setPower(0);
+            leftRear.setPower(0);
+            rightRear.setPower(0);
+        }
     }
 
     public void test(){
@@ -181,6 +189,9 @@ public class MovementHandler { // make this static
     }
 
     public double thetaTo(double x, double y, double d){ // d is distanceTo(x, y)
+        if (d == 0) {
+            return 0; // angle doesn't matter since x = y = 0
+        }
         double rawTheta = Math.toDegrees(Math.acos(x/d));
         return (y > 0) ? rawTheta : -rawTheta;
     }
@@ -198,8 +209,8 @@ public class MovementHandler { // make this static
     public double[] errorTransformer(double x, double y, double r) { // converts to polar, adds to theta, converts back
         // re-work this to return something like a Target
         double d = distanceTo(x, y);
-        double theta = thetaTo(x, y, d);
-        theta += 90 - r; // where the actual rotating happens
+        double theta = thetaTo(x, y, d); // d = 0
+        theta += 90 - r; // where the actual rotating happens. i swear to god this one fucking line
         double newX = Math.cos(Math.toRadians(theta)) * d;
         double newY = Math.sin(Math.toRadians(theta)) * d;
         return new double[] {newX, newY};
